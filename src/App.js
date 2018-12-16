@@ -1,28 +1,72 @@
 import React, { Component } from 'react';
-import logo from './logo.svg';
-import './App.css';
+import Header from './components/Header.js'
+import AddNote from './components/AddNote.js'
+import FilterNotes from './components/FilterNotes.js'
+import Notes from './components/Notes.js'
+import axios from 'axios'
 
 class App extends Component {
+  constructor(props) {
+    super(props)
+    this.state = {
+      notes: [],
+      newName: '',
+      newNote: '',
+      filter: ''
+    }
+  }
+
+  componentDidMount() {
+    axios.get("http://localhost:3002/notes").then(response => {
+      this.setState({ notes: response.data })
+    })
+  }
+
+  setNewName = (event) => {
+    event.preventDefault()
+    const exists = this.state.notes.find(person => person.name === this.state.newName)
+    if (!exists) {
+      const persons = this.state.persons.concat({
+        name: this.state.newName,
+        number: this.state.newNumber
+      })
+      this.setState({
+        persons: persons,
+        newName: '',
+        newNumber: '',
+      })
+    }
+  }
+
+  handleInputChange = (prop) => {
+    return (event) => {
+      let newState = {}
+      newState[prop] = event.target.value
+      this.setState(newState)
+    }
+  }
+
   render() {
-    return (
-      <div className="App">
-        <header className="App-header">
-          <img src={logo} className="App-logo" alt="logo" />
-          <p>
-            Edit <code>src/App.js</code> and save to reload.
-          </p>
-          <a
-            className="App-link"
-            href="https://reactjs.org"
-            target="_blank"
-            rel="noopener noreferrer"
-          >
-            Learn React
-          </a>
-        </header>
-      </div>
-    );
+    if (this.state.notes.length) {
+      const notes = this.state.notes.filter(note => note.title.toLowerCase().includes(this.state.filter.toLowerCase()))
+      return (
+        <div>
+          <Header />
+          <AddNote />
+          <FilterNotes />
+          <Notes notes={ notes } />
+        </div>
+      )
+    }
+    else {
+      return (
+        <div>
+          <Header />
+          <AddNote />
+        </div>
+      )      
+    }
   }
 }
 
-export default App;
+export default App
