@@ -1,16 +1,18 @@
 import React from 'react';
 import Note from './Note.js'
 
-const Notes = ({ notes }) => {
+const Notes = ({ notes, handleRemove }) => {
   return (
     <ul>
-      { notes.map(note => <Note
+      { notes.map(note => 
+        <Note
           key={ note.id }
           title={ note.title }
           author={ note.author } 
           text={ note.text }
+          handleRemove={ handleRemove(note) }
         /> 
-      )}
+      ) }
     </ul>
   )
 }

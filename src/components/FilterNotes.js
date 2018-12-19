@@ -1,10 +1,16 @@
 import React from 'react';
 
-const FilterNotes = () => {
+const FilterNotes = ({ filterValue, handleFilterChange }) => {
   return (
     <div>
-
-    </div>
+      <span>
+        Search notes:
+      </span>
+      <input
+        value={ filterValue }
+        onChange={ handleFilterChange }
+      />
+    </div>         
   )
 }
 
