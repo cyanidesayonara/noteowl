@@ -1,5 +1,5 @@
 import axios from 'axios'
-const baseUrl = '/:3001/notes'
+const baseUrl = ':3001/notes'
 
 const getAll = () => {
   const request = axios.get(baseUrl)
