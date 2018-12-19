@@ -1,6 +1,6 @@
 import React from 'react';
 
-const AddNewNote = ({ titleValue, authorValue, textValue, handleSubmit, handleTitleChange, handleAuthorChange, handleTextChange }) => {
+const AddNewNote = ({ titleValue, authorValue, contentValue, handleSubmit, handleTitleChange, handleAuthorChange, handleContentChange }) => {
   return (
     <form onSubmit={ handleSubmit }>
       <span>
@@ -14,7 +14,7 @@ const AddNewNote = ({ titleValue, authorValue, textValue, handleSubmit, handleTi
       <span>
         Text:
       </span>
-      <textarea value={ textValue } onChange={ handleTextChange }>
+      <textarea value={ contentValue } onChange={ handleContentChange }>
       </textarea>
       <button type="submit">
         Add Note

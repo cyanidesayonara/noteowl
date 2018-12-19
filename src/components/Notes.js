@@ -9,7 +9,7 @@ const Notes = ({ notes, handleRemove }) => {
           key={ note.id }
           title={ note.title }
           author={ note.author } 
-          text={ note.text }
+          content={ note.content }
           handleRemove={ handleRemove(note) }
         /> 
       ) }

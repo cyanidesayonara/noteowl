@@ -13,7 +13,7 @@ class App extends Component {
       notes: [],
       newTitle: '',
       newAuthor: '',
-      newText: '',
+      newContent: '',
       filter: '',
       notification: null
     }
@@ -34,7 +34,9 @@ class App extends Component {
     const newNote = {
       title: this.state.newTitle,
       author: this.state.newAuthor,
-      text: this.state.newText,
+      content: this.state.newContent,
+      date: new Date(),
+      important: true
     }
     noteService
       .create(newNote)
@@ -43,7 +45,7 @@ class App extends Component {
           notes: this.state.notes.concat(newNote),
           newTitle: '',
           newAuthor: '',
-          newText: '',
+          newContent: '',
           notification: `Note added`
         })
         setTimeout(() => {
@@ -65,7 +67,7 @@ class App extends Component {
               notes: notes,
               newTitle: '',
               newAuthor: '',
-              newText: '',
+              newContent: '',
               notification: `Note removed`
             })
             setTimeout(() => {
@@ -101,10 +103,11 @@ class App extends Component {
   }
   render() {
     if (this.state.notes.length) {
+      console.log(this.state.notes)
       const notes = this.state.notes.filter(note => 
         note.title.toLowerCase().includes(this.state.filter.toLowerCase()) ||
         note.author.toLowerCase().includes(this.state.filter.toLowerCase()) ||
-        note.text.toLowerCase().includes(this.state.filter.toLowerCase()))
+        note.content.toLowerCase().includes(this.state.filter.toLowerCase()))
       return (
         <div>
           <Header />
@@ -114,11 +117,11 @@ class App extends Component {
           <AddNewNote 
             titleValue = { this.state.newTitle }
             authorValue = { this.state.newAuthor }
-            textValue = { this.state.newText }
+            contentValue = { this.state.newContent }
             handleSubmit={ this.addNewNote }
             handleTitleChange = { this.handleInputChange("newTitle") }
             handleAuthorChange={ this.handleInputChange("newAuthor") }
-            handleTextChange={ this.handleInputChange("newText") }
+            handleContentChange={ this.handleInputChange("newContent") }
           />
           <FilterNotes
             filterValue={ this.state.filter }

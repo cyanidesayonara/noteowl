@@ -1,6 +1,6 @@
 import React from 'react';
 
-const Note = ({ title, author, text, handleRemove }) => {
+const Note = ({ title, author, content, handleRemove }) => {
   return (
     <li>
       <h2>
@@ -10,7 +10,7 @@ const Note = ({ title, author, text, handleRemove }) => {
         Author: { author }
       </h3>
       <p>
-        { text }
+        { content }
       </p>
       <button onClick={ handleRemove }>
         Delete

@@ -1,21 +1,9 @@
 {
   "name": "noteowl",
-  "version": "0.1.0",
+  "version": "0.0.1",
   "private": true,
-  "dependencies": {
-    "axios": "^0.18.0",
-    "json-server": "^0.14.0",
-    "react": "^16.6.3",
-    "react-dom": "^16.6.3",
-    "react-scripts": "2.1.1"
-  },
-  "scripts": {
-    "start": "react-scripts start",
-    "build": "react-scripts build",
-    "test": "react-scripts test",
-    "eject": "react-scripts eject",
-    "server": "json-server -p3001 db.json"
-  },
+  "description": "Note-taking with calendar",
+  "main": "index.js",
   "eslintConfig": {
     "extends": "react-app"
   },
@@ -24,5 +12,24 @@
     "not dead",
     "not ie <= 11",
     "not op_mini all"
-  ]
+  ],
+  "scripts": {
+    "start": "node index.js",
+    "build": "react-scripts build",
+    "watch": "nodemon index.js",
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "author": "",
+  "license": "ISC",
+  "dependencies": {
+    "axios": "^0.18.0",
+    "cors": "^2.8.5",
+    "express": "^4.16.4",
+    "react": "^16.6.3",
+    "react-dom": "^16.6.3",
+    "react-scripts": "2.1.1"
+  },
+  "devDependencies": {
+    "nodemon": "^1.18.9"
+  }
 }
