@@ -9,6 +9,7 @@ const Notes = ({ notes, handleRemove }) => {
           key={ note.id }
           title={ note.title }
           author={ note.author } 
+          date={ note.date }
           content={ note.content }
           handleRemove={ handleRemove(note) }
         /> 

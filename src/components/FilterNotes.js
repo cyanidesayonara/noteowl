@@ -3,10 +3,8 @@ import React from 'react';
 const FilterNotes = ({ filterValue, handleFilterChange }) => {
   return (
     <div>
-      <span>
-        Search notes:
-      </span>
       <input
+        placeholder="Filter notes"
         value={ filterValue }
         onChange={ handleFilterChange }
       />

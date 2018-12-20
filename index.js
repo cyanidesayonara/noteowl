@@ -18,7 +18,7 @@ let notes = [
         title: 'My first note :p',
         author: 'Santtu',
         content: 'Woo check it out babe it\'s my first note',
-        date: new Date(),
+        date: new Date().toLocaleString(),
         important: true
     }
 ]
@@ -53,7 +53,7 @@ app.post('/notes', (request, response) => {
         author: body.author,
         content: body.content,
         important: body.important || false,
-        date: new Date(),
+        date: new Date().toLocaleString(),
         id: generateId()
     }
 

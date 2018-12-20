@@ -1,5 +1,4 @@
 import React, { Component } from 'react';
-import Header from './components/Header.js'
 import Notification from './components/Notification.js'
 import AddNewNote from './components/AddNewNote.js'
 import FilterNotes from './components/FilterNotes.js'
@@ -35,7 +34,7 @@ class App extends Component {
       title: this.state.newTitle,
       author: this.state.newAuthor,
       content: this.state.newContent,
-      date: new Date(),
+      date: new Date().toLocaleString(),
       important: true
     }
     noteService
@@ -103,41 +102,60 @@ class App extends Component {
   }
   render() {
     if (this.state.notes.length) {
-      console.log(this.state.notes)
       const notes = this.state.notes.filter(note => 
         note.title.toLowerCase().includes(this.state.filter.toLowerCase()) ||
         note.author.toLowerCase().includes(this.state.filter.toLowerCase()) ||
         note.content.toLowerCase().includes(this.state.filter.toLowerCase()))
       return (
-        <div>
-          <Header />
-          <Notification
-            message={ this.state.notification }
-          />
-          <AddNewNote 
-            titleValue = { this.state.newTitle }
-            authorValue = { this.state.newAuthor }
-            contentValue = { this.state.newContent }
-            handleSubmit={ this.addNewNote }
-            handleTitleChange = { this.handleInputChange("newTitle") }
-            handleAuthorChange={ this.handleInputChange("newAuthor") }
-            handleContentChange={ this.handleInputChange("newContent") }
-          />
-          <FilterNotes
-            filterValue={ this.state.filter }
-            handleFilterChange={ this.handleInputChange("filter") }
-          />
-          <Notes
-            notes={ notes }
-            handleRemove={ this.handleRemove }
-          />
+        <div id="content">
+          <nav>
+            <h1>
+              Noteowl
+            </h1>
+            <button>
+              Add New Note
+            </button>
+            <FilterNotes
+              filterValue={ this.state.filter }
+              handleFilterChange={ this.handleInputChange("filter") }
+            />
+          </nav>
+          <div id="notes">
+            <Notification
+              message={ this.state.notification }
+            />
+            <AddNewNote
+              titleValue = { this.state.newTitle }
+              authorValue = { this.state.newAuthor }
+              contentValue = { this.state.newContent }
+              handleSubmit={ this.addNewNote }
+              handleTitleChange = { this.handleInputChange("newTitle") }
+              handleAuthorChange={ this.handleInputChange("newAuthor") }
+              handleContentChange={ this.handleInputChange("newContent") }
+            />
+            <Notes
+              notes={ notes }
+              handleRemove={ this.handleRemove }
+            />
+          </div>
         </div>
       )
     }
     else {
       return (
         <div>
-          <Header />
+          <nav>
+            <h1>
+              Noteowl
+            </h1>
+            <button>
+              Add New Note
+            </button>
+            <FilterNotes
+              filterValue={ this.state.filter }
+              handleFilterChange={ this.handleInputChange("filter") }
+            />
+          </nav>
           <AddNewNote />
         </div>
       )      
