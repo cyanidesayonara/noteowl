@@ -1,2 +1,2 @@
 # noteowl
-noteowl will be a calendar/notes app built using Node/React.
+noteowl is a calendar/notes app built using Node/React.
