@@ -1,24 +1,35 @@
 import React from 'react';
 
-const Note = ({ title, author, date, content, handleRemove }) => {
+const Note = ({
+  note,
+  handleRemove,
+  handleSubmit,
+  handleInputChange,
+}) => {
   return (
-    <li className="note">
-      <h2>
-        Title: { title }
-      </h2>
-      <h3>
-        Author: { author }
-      </h3>
-      <h4>
-        Date: { date }
-      </h4>
-      <p>
-        { content }
-      </p>
-      <button onClick={ handleRemove }>
-        Delete
-      </button>
-    </li>
+    <div className='note'>
+      <form onSubmit={ handleSubmit(note) }>
+        <span>
+          Title:
+        </span>
+        <input value={ note.title } onChange={ handleInputChange('title', note) } />
+        <span>
+          Author:
+        </span>
+        <input value={ note.author } onChange={ handleInputChange('author', note) } />
+        <span>
+          Text:
+        </span>
+        <textarea value={ note.content } onChange={ handleInputChange('content', note) }>
+        </textarea>
+        <button type='submit'>
+          Save
+        </button>
+        <button type='button' onClick={ handleRemove(note) }>
+            Delete
+        </button>
+      </form>
+    </div>
   )
 }
 

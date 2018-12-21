@@ -1,20 +1,24 @@
 import React from 'react';
 import Note from './Note.js'
 
-const Notes = ({ notes, handleRemove }) => {
+const Notes = ({
+  notes,
+  handleRemove,
+  handleSubmit,
+  handleInputChange
+}) => {
   return (
-    <ul>
-      { notes.map(note => 
+    <div>
+      { notes.map(note =>
         <Note
           key={ note.id }
-          title={ note.title }
-          author={ note.author } 
-          date={ note.date }
-          content={ note.content }
-          handleRemove={ handleRemove(note) }
-        /> 
+          note={ note }
+          handleRemove={ handleRemove }
+          handleSubmit={ handleSubmit }
+          handleInputChange={ handleInputChange }
+        />
       ) }
-    </ul>
+    </div>
   )
 }
 

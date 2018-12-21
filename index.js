@@ -2,76 +2,106 @@ const express = require('express')
 const app = express()
 const bodyParser = require('body-parser')
 const cors = require('cors')
+const Note = require('./models/note.js')
 
 app.use(cors())
 app.use(bodyParser.json())
 app.use(express.static('build'))
 
-const generateId = () => {
-    const maxId = notes.length > 0 ? notes.map(n => n.id).sort().reverse()[0] : 1
-    return maxId + 1
+const formatNote = (note) => {
+  const formattedNote = { ...note._doc, id: note._id }
+  delete formattedNote._id
+  delete formattedNote.__v
+  return formattedNote
 }
-
-let notes = [
-    {
-        id: 1,
-        title: 'My first note :p',
-        author: 'Santtu',
-        content: 'Woo check it out babe it\'s my first note',
-        date: new Date().toLocaleString(),
-        important: true
-    }
-]
 
 // get notes
 app.get('/notes', (request, response) => {
-    response.json(notes)
+  Note
+    .find({})
+    .then(notes => {
+      response.json(notes.map(formatNote))
+    })
 })
 
 // get note
 app.get('/notes/:id', (request, response) => {
-    const id = Number(request.params.id)
-    const note = notes.find(note => note.id === id)
-    
-    if (note) {
-        response.json(note)
-    } else {
+  Note
+    .findById(request.params.id)
+    .then(formatNote)
+    .then(formattedNote => {
+      if (formattedNote) {
+        response.json((formattedNote))
+      } else {
         response.status(404).end()
-    }
+      }
+    })
+    .catch(error => {
+      console.log(error)
+      response.status(400).send({ error: 'malformed id' })
+    })
 })
 
 // add note
 app.post('/notes', (request, response) => {
-    const body = request.body
+  const body = request.body
 
-    if (body.content === undefined) {
-        return response.status(400).json({ error: 'content missing' })
-    }
+  if (body.content === undefined) {
+    return response.status(400).json({ error: 'content missing' })
+  }
 
-    const note = {
-        title: body.title,
-        author: body.author,
-        content: body.content,
-        important: body.important || false,
-        date: new Date().toLocaleString(),
-        id: generateId()
-    }
+  const note = new Note({
+    title: body.title,
+    author: body.author,
+    content: body.content,
+    important: body.important || false,
+    date: new Date()
+  })
 
-    notes = notes.concat(note)
+  note
+    .save()
+    .then(formatNote)
+    .then(savedAndFormattedNote => {
+      response.json((savedAndFormattedNote))
+    })
+})
 
-
-    response.json(note)
+// update note
+app.put('/notes/:id', (request, response) => {
+  const body = request.body
+  const note = {
+    title: body.title,
+    author: body.author,
+    content: body.content,
+    important: body.important,
+    date: new Date()
+  }
+  
+  Note
+    .findByIdAndUpdate(request.params.id, note, { new: true })
+    .then(formatNote)
+    .then(updatedAndFormattedNote => {
+      response.json((updatedAndFormattedNote))
+    })
+    .catch(error => {
+      console.log(error)
+      response.status(400).send({ error: 'malformatted id' })
+    })
 })
 
 // delete note
 app.delete('/notes/:id', (request, response) => {
-    const id = Number(request.params.id)
-    notes = notes.filter(note => note.id !== id)
-
-    response.status(204).end()
+  Note
+    .findByIdAndRemove(request.params.id)
+    .then(result => {
+      response.status(204).end()
+    })
+    .catch(error => {
+      response.status(400).send({ error: 'malformed id' })
+    })
 })
 
 const PORT = process.env.PORT || 3001
 app.listen(PORT, () => {
-    console.log(`Server running on port ${PORT}`)
+  console.log(`Server running on port ${PORT}`)
 })

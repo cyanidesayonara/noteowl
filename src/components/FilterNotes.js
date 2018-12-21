@@ -8,7 +8,7 @@ const FilterNotes = ({ filterValue, handleFilterChange }) => {
         value={ filterValue }
         onChange={ handleFilterChange }
       />
-    </div>         
+    </div>
   )
 }
 

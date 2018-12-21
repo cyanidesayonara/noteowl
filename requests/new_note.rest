@@ -2,6 +2,8 @@ POST http://localhost:3001/notes
 content-type: application/json
 
 {
+    "title": "title",
+    "author": "author",
     "content": "New note",
     "important": true,
     "date": "Wed, 21 Oct 2015 18:27:50 GMT"
