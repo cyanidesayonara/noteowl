@@ -16,6 +16,7 @@ class App extends Component {
   }
 
   componentDidMount() {
+    document.title = 'NoteOwl'
     noteService
       .getAll()
       .then(notes => {
@@ -26,6 +27,7 @@ class App extends Component {
   newNote = () => {
     if (!this.state.notes.find(n => n.id === 0)) {
       const note = {
+        id: 0,
         title: '',
         author: '',
         content: '',
@@ -33,26 +35,26 @@ class App extends Component {
         important: false
       }
       this.setState({
-        notes: this.state.notes.concat(note)
+        notes: [note].concat(this.state.notes)
       })
     }
   }
 
   saveNote = (note) => (event) => {
     event.preventDefault()
-    if (note.id) {
+    if (note.id === 0) {
       noteService
-        .update(note.id, note)
-        .then(updatedNote => {
-          const index = this.state.notes.findIndex(n => n.id === updatedNote.id)
-          const newState = update(this.state, {
-            notes: {
-              [index]: { $set: updatedNote }
-            }
+        .create(note)
+        .then(createdNote => {
+          const notes = this.state.notes.filter(n => n.id !== 0)
+          this.setState({
+            notes: [createdNote].concat(notes),
+            notification: 'Note saved'
           })
-          this.setState({ newState, notification: 'Note saved' })
           setTimeout(() => {
-            this.setState({ notification: null })
+            this.setState({
+              notification: null
+            })
           }, 3000)
         })
         .catch(error => {
@@ -60,15 +62,20 @@ class App extends Component {
         })
     } else {
       noteService
-        .create(note)
-        .then(createdNote => {
-          const index = this.state.notes.findIndex(n => n.id === createdNote.id)
+        .update(note.id, note)
+        .then(updatedNote => {
+          const index = this.state.notes.findIndex(n => n.id === updatedNote.id)
           const newState = update(this.state, {
             notes: {
-              [index]: { $set: createdNote }
+              [index]: {
+                $set: updatedNote
+              }
             }
           })
-          this.setState({ newState })
+          this.setState({
+            newState,
+            notification: 'Note saved'
+          })
           setTimeout(() => {
             this.setState({
               notification: null

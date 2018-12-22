@@ -30,22 +30,34 @@ ul {
   list-style: none;
 }
 
-button,
-input,
-textarea {
+button {
   margin: 5px;
   padding: 5px;
 }
 
-input,
-textarea {
-  width: 90%;
+form h3,
+form p {
+  position: relative;
+  min-height: 28px;
+  margin: 10px 0;
+}
+form input,
+form textarea {
+  font-size: inherit;
+  font-weight: inherit;
+  font-family: inherit;
+  padding: 0;
+  width: 100%;
   border: none;
   background: none;
   outline: none;
   border-bottom: 1px solid black;
 }
+form input {
+  position: absolute;
+}
 button {
+  cursor: pointer;
   border: none;
   outline: none;
   box-shadow: rgba(0, 9, 9, 0.2) 0 2px 2px 0,
@@ -67,6 +79,7 @@ button:focus {
   box-shadow: rgba(0, 0, 0, .3) 0 0 10px;
 }
 .note {
+  position: relative;
   text-align: left;
   min-width: 200px;
   max-width: 360px;
@@ -75,8 +88,4 @@ button:focus {
 }
 .error {
   background: #88FF88;
-}
-
-form > * {
-  display: block;
 }

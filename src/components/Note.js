@@ -9,19 +9,14 @@ const Note = ({
   return (
     <div className='note'>
       <form onSubmit={ handleSubmit(note) }>
-        <span>
-          Title:
-        </span>
-        <input value={ note.title } onChange={ handleInputChange('title', note) } />
-        <span>
-          Author:
-        </span>
-        <input value={ note.author } onChange={ handleInputChange('author', note) } />
-        <span>
-          Text:
-        </span>
-        <textarea value={ note.content } onChange={ handleInputChange('content', note) }>
-        </textarea>
+        <h3>
+          <input value={ note.title } placeholder="Title" onChange={ handleInputChange('title', note) } />
+          { note.title }
+        </h3>
+        <p>
+          <textarea value={ note.content } placeholder="Add text here" onChange={ handleInputChange('content', note) }>
+          </textarea>
+        </p>
         <button type='submit'>
           Save
         </button>
