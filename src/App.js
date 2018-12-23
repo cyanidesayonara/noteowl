@@ -108,7 +108,7 @@ class App extends Component {
           const notes = this.state.notes.filter(n => n.id !== note.id)
           this.setState({
             notes: notes,
-            notification: 'Failed to delete note'
+            notification: 'Note deleted'
           })
           setTimeout(() => {
             this.setState({ notification: null })
