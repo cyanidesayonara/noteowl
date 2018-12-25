@@ -1,5 +1,4 @@
 import React from 'react';
-import Notification from './Notification.js'
 import Note from './Note.js'
 
 const Notes = ({
@@ -11,9 +10,6 @@ const Notes = ({
 }) => {
   return (
     <div id='notes'>
-      <Notification
-        message={ notification }
-      />
       { notes.map(note =>
         <Note
           key={ note.id }
@@ -21,6 +17,7 @@ const Notes = ({
           handleRemove={ handleRemove }
           handleSubmit={ handleSubmit }
           handleInputChange={ handleInputChange }
+          notification={ notification }
         />
       ) }
     </div>

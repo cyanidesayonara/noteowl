@@ -77,7 +77,7 @@ button:focus {
   display: inline-block;
   background: #FFFF88;
 }
-.note form {
+.note form > * {
   cursor: default;
 }
 .note h3,
