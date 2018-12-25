@@ -1,5 +1,4 @@
 import React, { Component } from 'react';
-import Notification from './components/Notification.js'
 import FilterNotes from './components/FilterNotes.js'
 import Notes from './components/Notes.js'
 import noteService from './services/notes.js'
@@ -151,22 +150,18 @@ class App extends Component {
           <button onClick={ this.newNote }>
             Add New Note
           </button>
-          <FilterNotes
+{/*           <FilterNotes
             filterValue={ this.state.filter }
             handleFilterChange={ this.handleInputChange('filter', undefined) }
-          />
+          /> */}
         </nav>
-        <div id="notes">
-          <Notification
-            message={ this.state.notification }
-          />
-          <Notes
-            notes={ notes }
-            handleRemove={ this.handleRemove }
-            handleSubmit={ this.saveNote }
-            handleInputChange={ this.handleInputChange }
-          />
-        </div>
+        <Notes
+          notification={ this.state.notification }
+          notes={ notes }
+          handleRemove={ this.handleRemove }
+          handleSubmit={ this.saveNote }
+          handleInputChange={ this.handleInputChange }
+        />
       </div>
     )
   }

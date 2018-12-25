@@ -1,14 +1,19 @@
 import React from 'react';
+import Notification from './Notification.js'
 import Note from './Note.js'
 
 const Notes = ({
+  notification,
   notes,
   handleRemove,
   handleSubmit,
   handleInputChange
 }) => {
   return (
-    <div>
+    <div id='notes'>
+      <Notification
+        message={ notification }
+      />
       { notes.map(note =>
         <Note
           key={ note.id }

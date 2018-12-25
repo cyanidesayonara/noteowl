@@ -1,3 +1,10 @@
+html {
+  box-sizing: border-box;
+}
+*:before,
+*:after {
+  box-sizing: inherit;
+}
 body {
   margin: 0;
   padding: 0;
@@ -12,8 +19,12 @@ code {
   font-family: source-code-pro, Menlo, Monaco, Consolas, "Courier New",
     monospace;
 }
-
 nav {
+  top: 0;
+  position: fixed;
+  z-index: 9001;
+  width: 100%;
+  background: #fff;
   padding: 10px;
   text-align: center;
   box-shadow: rgba(0,0,0,.3) 0 0 10px;
@@ -29,37 +40,13 @@ ul {
   padding: 0;
   list-style: none;
 }
-
 button {
   margin: 5px;
   padding: 5px;
-}
-
-form h3,
-form p {
-  position: relative;
-  min-height: 28px;
-  margin: 10px 0;
-}
-form input,
-form textarea {
-  font-size: inherit;
-  font-weight: inherit;
-  font-family: inherit;
-  padding: 0;
-  width: 100%;
-  border: none;
-  background: none;
-  outline: none;
-  border-bottom: 1px solid black;
-}
-form input {
-  position: absolute;
-}
-button {
   cursor: pointer;
   border: none;
   outline: none;
+  border-radius: 2px;
   box-shadow: rgba(0, 9, 9, 0.2) 0 2px 2px 0,
   rgba(0, 0, 0, .1) 0 0 0 1px;
 }
@@ -70,22 +57,54 @@ button:focus {
 }
 
 #notes {
+  margin-top: 72px;
+  min-height: calc(100vh - 72px);
   text-align: center;
+  position: relative;
 }
 .note,
 .error {
-  padding: 10px;
-  margin: 30px 30px 0 30px;
+  border-radius: 2px;
+  padding: 20px;
+  margin: 10px;
   box-shadow: rgba(0, 0, 0, .3) 0 0 10px;
-}
-.note {
-  position: relative;
-  text-align: left;
-  min-width: 200px;
-  max-width: 360px;
-  display: inline-block;
-  background: #FFFF88;
 }
 .error {
   background: #88FF88;
+}
+.note {
+  cursor: move;
+  display: inline-block;
+  background: #FFFF88;
+}
+.note form {
+  cursor: default;
+}
+.note h3,
+.note p {
+  margin: 10px 0;
+}
+.note textarea {
+  resize: none!important;
+  font-size: inherit;
+  font-weight: inherit;
+  font-family: inherit;
+  width: 100%;
+  border: none;
+  background: none;
+  outline: none;
+  padding: 0;
+}
+.note textarea+.border {
+  background: #000;
+  height: 2px;
+  display: block;
+  top: 100%;
+  width: 100%;
+  transform: scaleX(0);
+  transition: transform .25s;
+}
+.note textarea:hover+.border,
+.note textarea:focus+.border {
+  transform: scaleX(1);
 }

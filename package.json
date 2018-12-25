@@ -14,7 +14,7 @@
     "not op_mini all"
   ],
   "scripts": {
-    "start": "node index.js",
+    "start": "react-scripts start",
     "build": "react-scripts build",
     "lint": "eslint .",
     "watch": "nodemon index.js",
@@ -30,7 +30,9 @@
     "immutability-helper": "^2.9.0",
     "mongoose": "^5.4.0",
     "react": "^16.7.0",
+    "react-autosize-textarea": "^6.0.0",
     "react-dom": "^16.7.0",
+    "react-draggable": "^3.1.1",
     "react-scripts": "2.1.1"
   },
   "devDependencies": {
