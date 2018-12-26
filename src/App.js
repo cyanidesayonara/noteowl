@@ -1,8 +1,8 @@
-import React, { Component } from 'react';
+import React, { Component } from 'react'
 import FilterNotes from './components/FilterNotes.js'
 import Notes from './components/Notes.js'
 import noteService from './services/notes.js'
-import update from 'immutability-helper';
+import update from 'immutability-helper'
 
 class App extends Component {
   constructor(props) {
@@ -10,7 +10,7 @@ class App extends Component {
     this.state = {
       notes: [],
       filter: '',
-      notification: null
+      notifications: {}
     }
   }
 
@@ -45,14 +45,20 @@ class App extends Component {
       noteService
         .create(note)
         .then(createdNote => {
-          const notes = this.state.notes.filter(n => n.id !== 0)
+          let notes = this.state.notes.filter(n => n.id !== 0)
+          notes = [createdNote].concat(notes)
+          let notifications = this.state.notifications
+          notifications[createdNote.id] = 'Note saved'
           this.setState({
-            notes: [createdNote].concat(notes),
-            notification: 'Note saved'
+            notes: notes,
+            notifications: notifications
           })
+          console.log(notifications)
           setTimeout(() => {
+            let notifications = this.state.notifications
+            delete notifications[createdNote.id]
             this.setState({
-              notification: null
+              notifications: notifications
             })
           }, 3000)
         })
@@ -63,21 +69,24 @@ class App extends Component {
       noteService
         .update(note.id, note)
         .then(updatedNote => {
+          let notifications = this.state.notifications
+          notifications[updatedNote.id] = 'Note saved'
           const index = this.state.notes.findIndex(n => n.id === updatedNote.id)
-          const newState = update(this.state, {
-            notes: {
-              [index]: {
-                $set: updatedNote
-              }
+          const notes = update(this.state.notes, {
+            [index]: {
+              $set: updatedNote
             }
           })
           this.setState({
-            newState,
-            notification: 'Note saved'
+            notes: notes,
+            notifications: notifications
           })
+          console.log(this.state.notifications)
           setTimeout(() => {
+            let notifications = this.state.notifications
+            delete notifications[updatedNote.id]
             this.setState({
-              notification: null
+              notifications: notifications
             })
           }, 3000)
         })
@@ -96,7 +105,6 @@ class App extends Component {
           const notes = this.state.notes.filter(n => n.id !== note.id)
           this.setState({
             notes: notes,
-            notification: 'Note deleted'
           })
           setTimeout(() => {
             this.setState({ notification: null })
@@ -107,7 +115,6 @@ class App extends Component {
           const notes = this.state.notes.filter(n => n.id !== note.id)
           this.setState({
             notes: notes,
-            notification: 'Note deleted'
           })
           setTimeout(() => {
             this.setState({ notification: null })
@@ -156,10 +163,9 @@ class App extends Component {
           /> */}
         </nav>
         <Notes
-          notification={ this.state.notification }
           notes={ notes }
           handleRemove={ this.handleRemove }
-          handleSubmit={ this.saveNote }
+          saveNote={ this.saveNote }
           handleInputChange={ this.handleInputChange }
         />
       </div>

@@ -1,7 +1,9 @@
-import React from 'react';
+import React from 'react'
 
 const Notification = ({ message }) => {
-  if (message === null) {
+  console.log(message === undefined)
+  console.log(message)
+  if (message === undefined) {
     return null
   }
   return (

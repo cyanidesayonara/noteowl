@@ -2,10 +2,9 @@ import React from 'react';
 import Note from './Note.js'
 
 const Notes = ({
-  notification,
   notes,
   handleRemove,
-  handleSubmit,
+  saveNote,
   handleInputChange
 }) => {
   return (
@@ -15,9 +14,8 @@ const Notes = ({
           key={ note.id }
           note={ note }
           handleRemove={ handleRemove }
-          handleSubmit={ handleSubmit }
+          saveNote={ saveNote }
           handleInputChange={ handleInputChange }
-          notification={ notification }
         />
       ) }
     </div>
