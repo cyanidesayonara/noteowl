@@ -57,23 +57,32 @@ button:focus {
 }
 
 #notes {
-  margin-top: 72px;
-  min-height: calc(100vh - 72px);
+  padding-top: 72px;
+  min-height: 100vh;
   text-align: center;
   position: relative;
 }
 .note {
+  text-align: left;
   border-radius: 2px;
   padding: 20px;
   margin: 10px;
   box-shadow: rgba(0, 0, 0, .3) 0 0 10px;
-}
-.notification {
-}
-.note {
   cursor: move;
   display: inline-block;
   background: #FFFF88;
+}
+.notification {
+  position: absolute;
+  text-align: center;
+  font-size: 12px;
+  top: 0;
+  left: 0;
+  right: 0;
+  padding: 10px;
+}
+.note time {
+  font-size: 12px;
 }
 .note form > * {
   cursor: default;

@@ -3,6 +3,7 @@ import FilterNotes from './components/FilterNotes.js'
 import Notes from './components/Notes.js'
 import noteService from './services/notes.js'
 import update from 'immutability-helper'
+import ReactGA from 'react-ga';
 
 class App extends Component {
   constructor(props) {
@@ -18,6 +19,8 @@ class App extends Component {
     noteService
       .getAll()
       .then(notes => { this.setState({ notes: notes }) })
+    ReactGA.initialize('UA-123791717-1');
+    ReactGA.pageview('/');
   }
 
   newNote = () => {
@@ -27,7 +30,7 @@ class App extends Component {
         title: '',
         author: '',
         content: '',
-        date: '',
+        date: null,
         important: false,
         notification: null
       }
