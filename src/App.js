@@ -19,7 +19,7 @@ class App extends Component {
     noteService
       .getAll()
       .then(notes => { this.setState({ notes: notes }) })
-    ReactGA.initialize('UA-123791717-1');
+    ReactGA.initialize('UA-120584024-4');
     ReactGA.pageview('/');
   }
 
