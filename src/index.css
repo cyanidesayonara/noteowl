@@ -62,15 +62,13 @@ button:focus {
   text-align: center;
   position: relative;
 }
-.note,
-.error {
+.note {
   border-radius: 2px;
   padding: 20px;
   margin: 10px;
   box-shadow: rgba(0, 0, 0, .3) 0 0 10px;
 }
-.error {
-  background: #88FF88;
+.notification {
 }
 .note {
   cursor: move;

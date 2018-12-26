@@ -19,9 +19,7 @@ const formatNote = (note) => {
 app.get('/notes', (request, response) => {
   Note
     .find({})
-    .then(notes => {
-      response.json(notes.map(formatNote))
-    })
+    .then(notes => { response.json(notes.map(formatNote)) })
 })
 
 // get note
@@ -55,15 +53,14 @@ app.post('/notes', (request, response) => {
     author: body.author,
     content: body.content,
     important: body.important || false,
-    date: new Date()
+    date: new Date(),
+    notification: null
   })
 
   note
     .save()
     .then(formatNote)
-    .then(savedAndFormattedNote => {
-      response.json((savedAndFormattedNote))
-    })
+    .then(savedAndFormattedNote => { response.json((savedAndFormattedNote)) })
 })
 
 // update note
@@ -74,15 +71,14 @@ app.put('/notes/:id', (request, response) => {
     author: body.author,
     content: body.content,
     important: body.important,
-    date: new Date()
+    date: new Date(),
+    notification: null
   }
   
   Note
     .findByIdAndUpdate(request.params.id, note, { new: true })
     .then(formatNote)
-    .then(updatedAndFormattedNote => {
-      response.json((updatedAndFormattedNote))
-    })
+    .then(updatedAndFormattedNote => { response.json((updatedAndFormattedNote)) })
     .catch(error => {
       console.log(error)
       response.status(400).send({ error: 'malformatted id' })
@@ -93,15 +89,9 @@ app.put('/notes/:id', (request, response) => {
 app.delete('/notes/:id', (request, response) => {
   Note
     .findByIdAndRemove(request.params.id)
-    .then(result => {
-      response.status(204).end()
-    })
-    .catch(error => {
-      response.status(400).send({ error: 'malformed id' })
-    })
+    .then(result => { response.status(204).end() })
+    .catch(error => { response.status(400).send({ error: 'malformed id' }) })
 })
 
 const PORT = process.env.PORT || 3001
-app.listen(PORT, () => {
-  console.log(`Server running on port ${PORT}`)
-})
+app.listen(PORT, () => { console.log(`Server running on port ${PORT}`) })

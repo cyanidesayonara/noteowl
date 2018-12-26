@@ -1,13 +1,11 @@
 import React from 'react'
 
 const Notification = ({ message }) => {
-  console.log(message === undefined)
-  console.log(message)
-  if (message === undefined) {
+  if (message === null) {
     return null
   }
   return (
-    <div className="error">
+    <div className="notification">
       { message }
     </div>
   )

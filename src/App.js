@@ -10,7 +10,6 @@ class App extends Component {
     this.state = {
       notes: [],
       filter: '',
-      notifications: {}
     }
   }
 
@@ -18,9 +17,7 @@ class App extends Component {
     document.title = 'NoteOwl'
     noteService
       .getAll()
-      .then(notes => {
-        this.setState({ notes: notes })
-      })
+      .then(notes => { this.setState({ notes: notes }) })
   }
 
   newNote = () => {
@@ -31,70 +28,64 @@ class App extends Component {
         author: '',
         content: '',
         date: '',
-        important: false
+        important: false,
+        notification: null
       }
-      this.setState({
-        notes: [note].concat(this.state.notes)
-      })
+      this.setState({ notes: [note].concat(this.state.notes) })
     }
   }
 
   saveNote = (note) => (event) => {
     event.preventDefault()
-    if (note.id === 0) {
-      noteService
-        .create(note)
-        .then(createdNote => {
-          let notes = this.state.notes.filter(n => n.id !== 0)
-          notes = [createdNote].concat(notes)
-          let notifications = this.state.notifications
-          notifications[createdNote.id] = 'Note saved'
-          this.setState({
-            notes: notes,
-            notifications: notifications
+    if (note.title && note.content) {
+      if (note.id === 0) {
+        noteService
+          .create(note)
+          .then(createdNote => {
+            createdNote.notification = 'Note saved'
+            let notes = this.state.notes.filter(n => n.id !== 0)
+            notes = [createdNote].concat(notes)
+            this.setState({ notes: notes })
           })
-          console.log(notifications)
-          setTimeout(() => {
-            let notifications = this.state.notifications
-            delete notifications[createdNote.id]
-            this.setState({
-              notifications: notifications
+          .catch(error => { console.log(error) })
+      } else {
+        noteService
+          .update(note.id, note)
+          .then(updatedNote => {
+            updatedNote.notification = 'Note saved'
+            const index = this.state.notes.findIndex(n => n.id === updatedNote.id)
+            const notes = update(this.state.notes, {
+              [index]: { $set: updatedNote }
             })
-          }, 3000)
-        })
-        .catch(error => {
-          console.log(error)
-        })
-    } else {
-      noteService
-        .update(note.id, note)
-        .then(updatedNote => {
-          let notifications = this.state.notifications
-          notifications[updatedNote.id] = 'Note saved'
-          const index = this.state.notes.findIndex(n => n.id === updatedNote.id)
-          const notes = update(this.state.notes, {
-            [index]: {
-              $set: updatedNote
-            }
+            this.setState({ notes: notes })
           })
-          this.setState({
-            notes: notes,
-            notifications: notifications
-          })
-          console.log(this.state.notifications)
-          setTimeout(() => {
-            let notifications = this.state.notifications
-            delete notifications[updatedNote.id]
-            this.setState({
-              notifications: notifications
-            })
-          }, 3000)
-        })
-        .catch(error => {
-          console.log(error)
-        })
+          .catch(error => { console.log(error) })
+      }
+    } else if (event.type === 'submit') {
+      const index = this.state.notes.findIndex(n => n.id === note.id)
+      const notes = update(this.state.notes, {
+        [index]: {
+          ['notification']: {
+            $set: 'Note must have a title and text'
+          }
+        }
+      })
+      this.setState({ notes: notes })
     }
-
+    // set notification to null after timeout
+    setTimeout(() => {
+      const index = this.state.notes.findIndex(n => n.id === note.id)
+      const notes = update(this.state.notes, {
+        [index]: {
+          ['notification']: {
+            $set: null
+          }
+        }
+      })
+      this.setState({
+        notes: notes
+      })
+    }, 3000)
   }
 
   handleRemove = (note) => () => {
@@ -103,22 +94,12 @@ class App extends Component {
         .remove(note.id)
         .then(removedNote => {
           const notes = this.state.notes.filter(n => n.id !== note.id)
-          this.setState({
-            notes: notes,
-          })
-          setTimeout(() => {
-            this.setState({ notification: null })
-          }, 3000)
+          this.setState({ notes: notes })
         })
         .catch(error => {
           console.log(error)
           const notes = this.state.notes.filter(n => n.id !== note.id)
-          this.setState({
-            notes: notes,
-          })
-          setTimeout(() => {
-            this.setState({ notification: null })
-          }, 3000)
+          this.setState({ notes: notes })
         })
     }
   }
@@ -128,14 +109,10 @@ class App extends Component {
       const value = event.target.value
       if (note) {
         const index = this.state.notes.findIndex(n => n.id === note.id)
-        const newState = update(this.state, {
-          notes: {
-            [index]: {
-              [prop]: { $set: value }
-            }
-          }
+        const notes = update(this.state.notes, {
+          [index]: { [prop]: { $set: value } }
         })
-        this.setState(newState)
+        this.setState({ notes: notes })
       } else {
         this.setState({ [prop]: value })
       }
