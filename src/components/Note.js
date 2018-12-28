@@ -7,40 +7,47 @@ import Moment from 'react-moment';
 const Note = ({
   note,
   handleRemove,
+  handleDrag,
   saveNote,
   handleInputChange,
 }) => {
+  console.log(note.position)
   return (
     <Draggable
+      position={ note.position }
       cancel='form>*'
       bounds='parent'
       onStop={ saveNote(note) }
+      onDrag={ handleDrag(note) }
     >
       <div className='note'>
-        <Notification
-          message={ note.notification }
-        />
+        <Notification message={ note.notification } />
         <form onSubmit={ saveNote(note) }>
           <h3>
-            <TextareaAutosize onBlur={ saveNote(note) } onResize={(e)=>{}} value={ note.title } placeholder='Title' onChange={ handleInputChange('title', note) } />
+            <TextareaAutosize 
+              onBlur={ saveNote(note) }
+              onResize={(e)=>{}}
+              value={ note.title }
+              placeholder='Title'
+              onChange={ handleInputChange('title', note) }
+            />
             <span className='border'></span>
           </h3>
           {
-            note.date && 
-            <Moment interval={0} format='dddd DD MMM YYYY HH:MM' >
-              { note.date }
-            </Moment>
+            note.date &&
+            <Moment date={ note.date } interval={0} format='dddd DD MMM YYYY HH:MM' />
           }
           <p>
-            <TextareaAutosize onBlur={ saveNote(note) } onResize={(e)=>{}} value={ note.content } placeholder='Add text here' onChange={ handleInputChange('content', note) } />
+            <TextareaAutosize
+              onBlur={ saveNote(note) }
+              onResize={(e)=>{}}
+              value={ note.content }
+              placeholder='Add text here'
+              onChange={ handleInputChange('content', note) }
+            />
             <span className='border'></span>
           </p>
-          <button type='submit'>
-            Save
-          </button>
-          <button type='button' onClick={ handleRemove(note) }>
-            Delete
-          </button>
+          <button type='button' onClick={ handleRemove(note) }>Delete</button>
         </form>
       </div>
     </Draggable>

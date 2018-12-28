@@ -34,10 +34,7 @@ app.get('/notes/:id', (request, response) => {
         response.status(404).end()
       }
     })
-    .catch(error => {
-      console.log(error)
-      response.status(400).send({ error: 'malformed id' })
-    })
+    .catch(error => { response.status(400).send({ error: 'malformed id' }) })
 })
 
 // add note
@@ -48,41 +45,50 @@ app.post('/notes', (request, response) => {
     return response.status(400).json({ error: 'content missing' })
   }
 
+  const createdDate = new Date()
+
   const note = new Note({
     title: body.title,
     author: body.author,
     content: body.content,
     important: body.important || false,
-    date: new Date(),
-    notification: null
+    date: createdDate,
+    notification: null,
+    position: body.position
   })
 
   note
     .save()
     .then(formatNote)
     .then(savedAndFormattedNote => { response.json((savedAndFormattedNote)) })
+    .catch(error => { response.status(400).send({ error: 'malformed id' }) })
 })
 
 // update note
 app.put('/notes/:id', (request, response) => {
   const body = request.body
+
+  if (body.content === undefined) {
+    return response.status(400).json({ error: 'content missing' })
+  }
+
+  const updatedDate = new Date()
+
   const note = {
     title: body.title,
     author: body.author,
     content: body.content,
     important: body.important,
-    date: new Date(),
-    notification: null
+    date: updatedDate,
+    notification: null,
+    position: body.position
   }
-  
+
   Note
     .findByIdAndUpdate(request.params.id, note, { new: true })
     .then(formatNote)
     .then(updatedAndFormattedNote => { response.json((updatedAndFormattedNote)) })
-    .catch(error => {
-      console.log(error)
-      response.status(400).send({ error: 'malformatted id' })
-    })
+    .catch(error => { response.status(400).send({ error: 'malformed id' }) })
 })
 
 // delete note

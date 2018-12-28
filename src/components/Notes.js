@@ -4,6 +4,7 @@ import Note from './Note.js'
 const Notes = ({
   notes,
   handleRemove,
+  handleDrag,
   saveNote,
   handleInputChange
 }) => {
@@ -14,6 +15,7 @@ const Notes = ({
           key={ note.id }
           note={ note }
           handleRemove={ handleRemove }
+          handleDrag={ handleDrag }
           saveNote={ saveNote }
           handleInputChange={ handleInputChange }
         />

@@ -17,7 +17,8 @@ const Note = mongoose.model('Note', {
   content: String,
   date: Date,
   important: Boolean,
-  notification: String
+  notification: String,
+  position: Object
 })
 
 module.exports = Note
