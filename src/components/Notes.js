@@ -1,5 +1,5 @@
-import React from 'react';
-import Note from './Note.js'
+import React from 'react'
+import Note from './Note'
 
 const Notes = ({
   notes,

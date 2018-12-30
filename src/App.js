@@ -3,7 +3,7 @@ import FilterNotes from './components/FilterNotes.js'
 import Notes from './components/Notes.js'
 import noteService from './services/notes.js'
 import update from 'immutability-helper'
-import ReactGA from 'react-ga';
+import ReactGA from 'react-ga'
 
 class App extends Component {
   constructor(props) {
@@ -14,13 +14,28 @@ class App extends Component {
     }
   }
 
+  // set notification to null after timeout
+  hideNotification = (note) => {
+    const timeout = 3000
+    setTimeout(() => {
+      const index = this.state.notes.findIndex(n => n.id === note.id)
+      // if note not found, index will be -1
+      if (index >= 0) {
+        const notes = update(this.state.notes, {
+          [index]: { ['notification']: { $set: null } }
+        })
+        this.setState({ notes: notes })
+      }
+    }, timeout)
+  }
+
   componentDidMount() {
     document.title = 'NoteOwl'
     noteService
       .getAll()
       .then(notes => { this.setState({ notes: notes }) })
-    ReactGA.initialize('UA-120584024-4');
-    ReactGA.pageview('/');
+    ReactGA.initialize('UA-120584024-4')
+    ReactGA.pageview('/')
   }
 
   newNote = () => {
@@ -38,7 +53,7 @@ class App extends Component {
           y: 0
         }
       }
-      this.setState({ notes: [note].concat(this.state.notes) })
+      this.setState({ notes: this.state.notes.concat(note) })
     }
   }
 
@@ -50,79 +65,54 @@ class App extends Component {
             .create(note)
             .then(createdNote => {
               createdNote.notification = 'Note saved'
-              let notes = this.state.notes.filter(n => n.id !== 0)
-              notes = [createdNote].concat(notes)
-              this.setState({ notes: notes })
+              const notes = this.state.notes.filter(n => n.id !== 0)
+              this.setState({ notes: notes.concat(createdNote) })
+              this.hideNotification(createdNote)
             })
             .catch(error => { console.log(error) })
         } else {
           noteService
-            .update(note.id, note)
+            .update(note)
             .then(updatedNote => {
               updatedNote.notification = 'Note saved'
-              const index = this.state.notes.findIndex(n => n.id === updatedNote.id)
-              const notes = update(this.state.notes, {
-                [index]: { $set: updatedNote }
-              })
-              this.setState({ notes: notes })
+              const notes = this.state.notes.filter(n => n.id !== updatedNote.id)
+              this.setState({ notes: notes.concat(updatedNote) })
+              this.hideNotification(updatedNote)
             })
             .catch(error => { console.log(error) })
         }
       }
-      // set notification to null after timeout
-      setTimeout(() => {
-        const index = this.state.notes.findIndex(n => n.id === note.id)
-        const notes = update(this.state.notes, {
-          [index]: {
-            ['notification']: {
-              $set: null
-            }
-          }
-        })
-        this.setState({ notes: notes })
-      }, 3000)
     }
   }
 
   handleRemove = (note) => () => {
     if (!note.author) {
       if (window.confirm('Are you sure you want to remove this note?')) {
-        noteService
-          .remove(note.id)
-          .then(removedNote => {
-            const notes = this.state.notes.filter(n => n.id !== note.id)
-            this.setState({ notes: notes })
-          })
-          .catch(error => {
-            console.log(error)
-            const notes = this.state.notes.filter(n => n.id !== note.id)
-            this.setState({ notes: notes })
-          })
+        if (note.id === 0) {
+          const notes = this.state.notes.filter(n => n.id !== note.id)
+          this.setState({ notes: notes })          
+        } else {
+          noteService
+            .remove(note)
+            .then(response => {
+              const notes = this.state.notes.filter(n => n.id !== note.id)
+              this.setState({ notes: notes })
+            })
+            .catch(error => {
+              console.log(error)
+              const notes = this.state.notes.filter(n => n.id !== note.id)
+              this.setState({ notes: notes })
+            })
+        }
       }
     }
   }
 
   handleDrag = (note) => (event, ui) => {
-    const index = this.state.notes.findIndex(n => n.id === note.id)
-    let posX = 0
-    let posY = 0
-    if (this.state.notes[index].position) {
-      posX = this.state.notes[index].position.x
-      posY = this.state.notes[index].position.y
-    }
-    const notes = update(this.state.notes, {
-      [index]: {
-        ['position']: {
-          $set: {
-            x: posX + ui.deltaX,
-            y: posY + ui.deltaY
-          }
-        }
-      }
-    })
-    this.setState({
-      notes: notes
-    });
+    const notes = this.state.notes.filter(n => n.id !== note.id)
+    note.position.x += +ui.deltaX.toFixed(0)
+    note.position.y += +ui.deltaY.toFixed(0)
+    this.setState({ notes: notes.concat(note) })
   }
 
   handleInputChange = (prop, note) => {
@@ -155,10 +145,10 @@ class App extends Component {
           <button onClick={ this.newNote }>
             Add New Note
           </button>
-{/*           <FilterNotes
+          <FilterNotes
             filterValue={ this.state.filter }
             handleFilterChange={ this.handleInputChange('filter', undefined) }
-          /> */}
+          />
         </nav>
         <Notes
           notes={ notes }

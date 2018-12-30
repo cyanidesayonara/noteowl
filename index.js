@@ -1,103 +1,30 @@
+const http = require('http')
 const express = require('express')
 const app = express()
 const bodyParser = require('body-parser')
 const cors = require('cors')
-const Note = require('./models/note.js')
+const mongoose = require('mongoose')
+const middleware = require('./utils/middleware')
+const notesRouter = require('./controllers/notes')
+const config = require('./utils/config')
+
+mongoose
+  .connect(config.mongoUrl, { useNewUrlParser: true })
+  .then(() => { console.log('Connected to database') })
+  .catch(error => { console.log(error) })
 
 app.use(cors())
 app.use(bodyParser.json())
 app.use(express.static('build'))
+app.use(middleware.logger)
+app.use('/notes', notesRouter)
+app.use(middleware.error)
 
-const formatNote = (note) => {
-  const formattedNote = { ...note._doc, id: note._id }
-  delete formattedNote._id
-  delete formattedNote.__v
-  return formattedNote
-}
+const server = http.createServer(app)
 
-// get notes
-app.get('/notes', (request, response) => {
-  Note
-    .find({})
-    .then(notes => { response.json(notes.map(formatNote)) })
+server.listen(config.port, () => {
+  console.log(`Server running on port ${config.port}`)
 })
+server.on('close', () => { mongoose.connect.close() })
 
-// get note
-app.get('/notes/:id', (request, response) => {
-  Note
-    .findById(request.params.id)
-    .then(formatNote)
-    .then(formattedNote => {
-      if (formattedNote) {
-        response.json((formattedNote))
-      } else {
-        response.status(404).end()
-      }
-    })
-    .catch(error => { response.status(400).send({ error: 'malformed id' }) })
-})
-
-// add note
-app.post('/notes', (request, response) => {
-  const body = request.body
-
-  if (body.content === undefined) {
-    return response.status(400).json({ error: 'content missing' })
-  }
-
-  const createdDate = new Date()
-
-  const note = new Note({
-    title: body.title,
-    author: body.author,
-    content: body.content,
-    important: body.important || false,
-    date: createdDate,
-    notification: null,
-    position: body.position
-  })
-
-  note
-    .save()
-    .then(formatNote)
-    .then(savedAndFormattedNote => { response.json((savedAndFormattedNote)) })
-    .catch(error => { response.status(400).send({ error: 'malformed id' }) })
-})
-
-// update note
-app.put('/notes/:id', (request, response) => {
-  const body = request.body
-
-  if (body.content === undefined) {
-    return response.status(400).json({ error: 'content missing' })
-  }
-
-  const updatedDate = new Date()
-
-  const note = {
-    title: body.title,
-    author: body.author,
-    content: body.content,
-    important: body.important,
-    date: updatedDate,
-    notification: null,
-    position: body.position
-  }
-
-  Note
-    .findByIdAndUpdate(request.params.id, note, { new: true })
-    .then(formatNote)
-    .then(updatedAndFormattedNote => { response.json((updatedAndFormattedNote)) })
-    .catch(error => { response.status(400).send({ error: 'malformed id' }) })
-})
-
-// delete note
-app.delete('/notes/:id', (request, response) => {
-  Note
-    .findByIdAndRemove(request.params.id)
-    .then(result => { response.status(204).end() })
-    .catch(error => { response.status(400).send({ error: 'malformed id' }) })
-})
-
-const PORT = process.env.PORT || 3001
-app.listen(PORT, () => { console.log(`Server running on port ${PORT}`) })
+module.exports = { app, server }

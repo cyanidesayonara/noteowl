@@ -63,6 +63,8 @@ button:focus {
   position: relative;
 }
 .note {
+  min-width: 200px;
+  position: absolute;
   text-align: left;
   border-radius: 2px;
   padding: 20px;
@@ -114,4 +116,13 @@ button:focus {
 .note textarea:hover+.border,
 .note textarea:focus+.border {
   transform: scaleX(1);
+}
+.note:focus-within,
+.react-draggable-dragging {
+  z-index: 0;
+  animation: toTop forwards;
+}
+@keyframes toTop {
+  0%   { z-index: 0; }
+  100% { z-index: 9000; }
 }

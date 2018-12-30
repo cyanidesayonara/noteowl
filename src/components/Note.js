@@ -1,8 +1,9 @@
 import React from 'react'
 import TextareaAutosize from 'react-autosize-textarea'
 import Draggable from 'react-draggable'
-import Notification from './Notification.js'
-import Moment from 'react-moment';
+import Notification from './Notification'
+import Date from './Date'
+import Delete from './Delete'
 
 const Note = ({
   note,
@@ -11,11 +12,10 @@ const Note = ({
   saveNote,
   handleInputChange,
 }) => {
-  console.log(note.position)
   return (
     <Draggable
+      cancel='.note form>*'
       position={ note.position }
-      cancel='form>*'
       bounds='parent'
       onStop={ saveNote(note) }
       onDrag={ handleDrag(note) }
@@ -24,30 +24,27 @@ const Note = ({
         <Notification message={ note.notification } />
         <form onSubmit={ saveNote(note) }>
           <h3>
-            <TextareaAutosize 
+            <TextareaAutosize
               onBlur={ saveNote(note) }
-              onResize={(e)=>{}}
+              onResize={(e) => {}}
               value={ note.title }
               placeholder='Title'
               onChange={ handleInputChange('title', note) }
             />
             <span className='border'></span>
           </h3>
-          {
-            note.date &&
-            <Moment date={ note.date } interval={0} format='dddd DD MMM YYYY HH:MM' />
-          }
+          <Date date={ note.date } />
           <p>
             <TextareaAutosize
               onBlur={ saveNote(note) }
-              onResize={(e)=>{}}
+              onResize={(e) => {}}
               value={ note.content }
               placeholder='Add text here'
               onChange={ handleInputChange('content', note) }
             />
             <span className='border'></span>
           </p>
-          <button type='button' onClick={ handleRemove(note) }>Delete</button>
+          <Delete note={ note } handleRemove={ handleRemove } />
         </form>
       </div>
     </Draggable>
