@@ -110,8 +110,16 @@ class App extends Component {
 
   handleDrag = (note) => (event, ui) => {
     const notes = this.state.notes.filter(n => n.id !== note.id)
-    note.position.x += +ui.deltaX.toFixed(0)
-    note.position.y += +ui.deltaY.toFixed(0)
+    if (!note.position) {
+      note.position = {
+        x: 0,
+        y: 0
+      }
+    }
+    note.position = {
+      x: +note.position.x + +ui.deltaX.toFixed(0),
+      y: +note.position.y + +ui.deltaY.toFixed(0)
+    }
     this.setState({ notes: notes.concat(note) })
   }
 

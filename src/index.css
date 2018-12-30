@@ -55,7 +55,9 @@ button:focus {
   box-shadow: rgba(0, 0, 0, 0.2) 0 3px 8px 0,
   rgba(0, 0, 0, .1) 0 0 0 1px;
 }
-
+.d-none {
+  display: none;
+}
 #notes {
   padding-top: 72px;
   min-height: 100vh;
@@ -63,9 +65,10 @@ button:focus {
   position: relative;
 }
 .note {
-  min-width: 200px;
+  width: 220px;
   position: absolute;
   text-align: left;
+  left: calc(50% - 130px);
   border-radius: 2px;
   padding: 20px;
   margin: 10px;

@@ -2,7 +2,7 @@ import React from 'react'
 
 const FilterNotes = ({ filterValue, handleFilterChange }) => {
   return (
-    <div>
+    <div className="d-none">
       <input
         placeholder="Filter notes"
         value={ filterValue }
