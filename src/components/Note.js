@@ -28,8 +28,9 @@ const Note = ({
               onBlur={ saveNote(note) }
               onResize={(e) => {}}
               value={ note.title }
+              name="title"
               placeholder='Title'
-              onChange={ handleInputChange('title', note) }
+              onChange={ handleInputChange(note) }
             />
             <span className='border'></span>
           </h3>
@@ -39,8 +40,9 @@ const Note = ({
               onBlur={ saveNote(note) }
               onResize={(e) => {}}
               value={ note.content }
+              name="content"
               placeholder='Add text here'
-              onChange={ handleInputChange('content', note) }
+              onChange={ handleInputChange(note) }
             />
             <span className='border'></span>
           </p>

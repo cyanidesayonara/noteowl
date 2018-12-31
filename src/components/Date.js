@@ -6,9 +6,7 @@ const Date = ({ date }) => {
     return null
   }
   return (
-    <Moment
-      date={ date }
-    />
+    <Moment date={ date } />
   )
 }
 

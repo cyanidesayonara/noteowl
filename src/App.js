@@ -11,6 +11,9 @@ class App extends Component {
     this.state = {
       notes: [],
       filter: '',
+      username: '',
+      password: '',
+      user: null
     }
   }
 
@@ -38,14 +41,18 @@ class App extends Component {
     ReactGA.pageview('/')
   }
 
+  login = (event) => {
+    event.preventDefault()
+  }
+
   newNote = () => {
     if (!this.state.notes.find(n => n.id === 0)) {
       const note = {
         id: 0,
         title: '',
-        author: '',
         content: '',
-        date: null,
+        created: null,
+        updated: null,
         important: false,
         notification: null,
         position: {
@@ -123,17 +130,18 @@ class App extends Component {
     this.setState({ notes: notes.concat(note) })
   }
 
-  handleInputChange = (prop, note) => {
+  handleInputChange = (note) => {
     return (event) => {
       const value = event.target.value
+      const name = event.target.name
       if (note) {
         const index = this.state.notes.findIndex(n => n.id === note.id)
         const notes = update(this.state.notes, {
-          [index]: { [prop]: { $set: value } }
+          [index]: { [name]: { $set: value } }
         })
         this.setState({ notes: notes })
       } else {
-        this.setState({ [prop]: value })
+        this.setState({ [name]: value })
       }
     }
   }
@@ -141,11 +149,10 @@ class App extends Component {
   render() {
     const notes = this.state.notes.filter(note =>
       note.title.toLowerCase().includes(this.state.filter.toLowerCase()) ||
-      note.author.toLowerCase().includes(this.state.filter.toLowerCase()) ||
       note.content.toLowerCase().includes(this.state.filter.toLowerCase())
     )
     return (
-      <div id="content">
+      <div id='content'>
         <nav>
           <h1>
             Noteowl
@@ -155,8 +162,25 @@ class App extends Component {
           </button>
           <FilterNotes
             filterValue={ this.state.filter }
-            handleFilterChange={ this.handleInputChange('filter', undefined) }
+            handleInputChange={ this.handleInputChange }
           />
+          <form onSubmit={ this.login }>
+            <input
+              type='text'
+              placeholder='Username'
+              name='username'
+              value={ this.state.username }
+              onChange={ this.handleInputChange(null) }
+            />
+            <input
+              type='password'
+              placeholder='Password'
+              name='password'
+              value={ this.state.password }
+              onChange={ this.handleInputChange(null) }
+            />
+            <button type='submit'>Login</button>
+          </form>
         </nav>
         <Notes
           notes={ notes }

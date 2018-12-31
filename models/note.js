@@ -1,13 +1,30 @@
 const mongoose = require('mongoose')
 
-const Note = mongoose.model('Note', {
+const noteSchema = new mongoose.Schema({
   title: String,
-  author: String,
+  user: { type: mongoose.Schema.Types.ObjectId, ref: 'User' },
   content: String,
-  date: Date,
+  created: Date,
+  updated: Date,
   important: Boolean,
   notification: String,
   position: Object
 })
+
+noteSchema.statics.format = (note) => {
+  return {
+    id: note._id,
+    title: note.title,
+    user: note.user,
+    content: note.content,
+    created: note.created,
+    updated: note.updated,
+    important: note.important,
+    notification: note.notification,
+    position: note.position,
+  }
+}
+
+const Note = mongoose.model('Note', noteSchema)
 
 module.exports = Note

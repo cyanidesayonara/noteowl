@@ -3,7 +3,7 @@ content-type: application/json
 
 {
     "title": "title",
-    "author": "author",
+    "userID": "5c2a2363ace90a2690a157b2",
     "content": "New note",
     "important": true,
     "date": "Wed, 21 Oct 2015 18:27:50 GMT"

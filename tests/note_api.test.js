@@ -2,86 +2,131 @@ const supertest = require('supertest')
 const { app, server } = require('../index')
 const api = supertest(app)
 const Note = require('../models/note')
+const { initialNotes, nonExistingId, notesInDb } = require('./test_helper')
 
-const initialNotes = [
-  {
-    content: 'HTML on helppoa',
-    important: false
-  },
-  {
-    content: 'HTTP-protokollan tärkeimmät metodit ovat GET ja POST',
-    important: true
-  }
-]
+describe('when there is initially some notes saved', async () => {
+  beforeAll(async () => {
+    await Note.remove({})
 
-beforeAll(async () => {
-  await Note.remove({})
+    const noteObjects = initialNotes.map(n => new Note(n))
+    await Promise.all(noteObjects.map(n => n.save()))
+  })
 
-  const noteObjects = initialNotes.map(note => new Note(note))
-  const promiseArray = noteObjects.map(note => note.save())
-  await Promise.all(promiseArray)
-})
+  test('all notes are returned as json by GET /notes', async () => {
+    const notesInDatabase = await notesInDb()
 
-test('notes are returned as json', async () => {
-  await api
-    .get('/notes')
-    .expect(200)
-    .expect('Content-Type', /application\/json/)
-})
+    const response = await api
+      .get('/notes')
+      .expect(200)
+      .expect('Content-Type', /application\/json/)
 
-test('all notes are returned', async () => {
-  const response = await api
-    .get('/notes')
+    expect(response.body.length).toBe(notesInDatabase.length)
 
-  expect(response.body.length).toBe(initialNotes.length)
-})
+    const returnedContents = response.body.map(n => n.content)
+    notesInDatabase.forEach(note => {
+      expect(returnedContents).toContain(note.content)
+    })
+  })
 
-test('a specific note is within the returned notes', async () => {
-  const response = await api
-    .get('/notes')
+  test('individual notes are returned as json by GET /notes/:id', async () => {
+    const notesInDatabase = await notesInDb()
+    const aNote = notesInDatabase[0]
 
-  const contents = response.body.map(r => r.content)
-  expect(contents).toContain('HTTP-protokollan tärkeimmät metodit ovat GET ja POST')
-})
+    const response = await api
+      .get(`/notes/${aNote.id}`)
+      .expect(200)
+      .expect('Content-Type', /application\/json/)
 
-test('a valid note can be added', async () => {
-  const newNote = {
-    content: 'async/await yksinkertaistaa asynkronisten funktioiden kutsua',
-    important: true
-  }
+    expect(response.body.content).toBe(aNote.content)
+  })
 
-  await api
-    .post('/notes')
-    .send(newNote)
-    .expect(200)
-    .expect('Content-Type', /application\/json/)
+  test('404 returned by GET /notes/:id with nonexisting valid id', async () => {
+    const validNonexistingId = await nonExistingId()
 
-  const response = await api
-    .get('/notes')
+    await api
+      .get(`/notes/${validNonexistingId}`)
+      .expect(404)
+  })
 
-  const contents = response.body.map(r => r.content)
+  test('400 is returned by GET /notes/:id with invalid id', async () => {
+    const invalidId = '5a3d5da59070081a82a3445'
 
-  expect(response.body.length).toBe(initialNotes.length + 1)
-  expect(contents).toContain('async/await yksinkertaistaa asynkronisten funktioiden kutsua')
-})
+    await api
+      .get(`/notes/${invalidId}`)
+      .expect(400)
+  })
 
-test('note without content is not added', async () => {
-  const newNote = {
-    important: true
-  }
+  describe('addition of a new note', async () => {
 
-  await api
-    .post('/notes')
-    .send(newNote)
-    .expect(200)
-    .expect('Content-Type', /application\/json/)
+    test('POST /notes succeeds with valid data', async () => {
+      const notesAtStart = await notesInDb()
 
-  const response = await api
-    .get('/notes')
+      const newNote = {
+        content: 'async/await yksinkertaistaa asynkronisten funktioiden kutsua',
+        important: true
+      }
 
-  expect(response.body.length).toBe(initialNotes.length)
-})
+      await api
+        .post('/notes')
+        .send(newNote)
+        .expect(200)
+        .expect('Content-Type', /application\/json/)
 
-afterAll(() => {
-  server.close()
+      const notesAfterOperation = await notesInDb()
+
+      expect(notesAfterOperation.length).toBe(notesAtStart.length + 1)
+
+      const contents = notesAfterOperation.map(r => r.content)
+      expect(contents).toContain('async/await yksinkertaistaa asynkronisten funktioiden kutsua')
+    })
+
+    test('POST /notes fails with proper statuscode if content is missing', async () => {
+      const newNote = {
+        important: true
+      }
+
+      const notesAtStart = await notesInDb()
+
+      await api
+        .post('/notes')
+        .send(newNote)
+        .expect(400)
+
+      const notesAfterOperation = await notesInDb()
+
+      notesAfterOperation.map(r => r.content)
+
+      expect(notesAfterOperation.length).toBe(notesAtStart.length)
+    })
+  })
+
+  describe('deletion of a note', async () => {
+    let addedNote
+
+    beforeAll(async () => {
+      addedNote = new Note({
+        content: 'poisto pyynnöllä HTTP DELETE',
+        important: false
+      })
+      await addedNote.save()
+    })
+
+    test('DELETE /notes/:id succeeds with proper statuscode', async () => {
+      const notesAtStart = await notesInDb()
+
+      await api
+        .delete(`/notes/${addedNote._id}`)
+        .expect(204)
+
+      const notesAfterOperation = await notesInDb()
+
+      const contents = notesAfterOperation.map(r => r.content)
+
+      expect(contents).not.toContain(addedNote.content)
+      expect(notesAfterOperation.length).toBe(notesAtStart.length - 1)
+    })
+  })
+  afterAll(() => {
+    server.close()
+  })
 })
