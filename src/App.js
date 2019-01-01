@@ -94,7 +94,7 @@ class App extends Component {
         id: 0,
         title: '',
         content: '',
-        created: null,
+        created: new Date(),
         updated: null,
         important: false,
         notification: null,

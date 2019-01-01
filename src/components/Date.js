@@ -1,12 +1,15 @@
 import React from 'react'
 import Moment from 'react-moment'
 
-const Date = ({ date }) => {
+const Date = ({ text, date }) => {
   if (date === null) {
     return null
   }
   return (
-    <Moment date={ date } />
+    <div>
+      <span>{ text }</span>
+      <Moment format='ddd DD MMM YYYY HH:mm'>{ date }</Moment>
+    </div>
   )
 }
 

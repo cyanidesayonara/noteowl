@@ -35,7 +35,8 @@ const Note = ({
             />
             <span className='border'></span>
           </h3>
-          <Date date={ note.date } />
+          <Date text='Created: ' date={ note.created } />
+          <Date text='Saved: ' date={ note.updated } />
           <p>
             <TextareaAutosize
               onBlur={ saveNote(note) }

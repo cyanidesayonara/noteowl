@@ -52,15 +52,14 @@ notesRouter.post('/', async (request, response) => {
     }
 
     const user = await User.findOne({ _id: decodedToken.id })
-    const date = new Date()
 
     const note = new Note({
       title: body.title,
       user: user.id,
       content: body.content,
       important: body.important || false,
-      created: date,
-      updated: date,
+      created: body.created,
+      updated: new Date(),
       notification: null,
       position: body.position
     })
@@ -88,7 +87,6 @@ notesRouter.put('/:id', async (request, response) => {
       return response.status(400).json({ error: 'content missing' })
     }
 
-    console.log(body.user)
     const note = {
       title: body.title,
       user: body.user,
