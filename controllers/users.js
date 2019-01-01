@@ -13,7 +13,7 @@ usersRouter.post('/', async (request, response) => {
   try {
     const body = request.body
 
-    const existingUser = await User.find({username: body.username})
+    const existingUser = await User.find({ username: body.username })
     if (existingUser.length > 0) {
       return response.status(400).json({ error: 'username must be unique' })
     }

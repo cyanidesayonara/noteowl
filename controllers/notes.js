@@ -15,7 +15,7 @@ const getTokenFrom = (request) => {
 notesRouter.get('/', async (request, response) => {
   const notes = await Note
     .find({})
-    .populate('user', { username: 1 })
+    .populate('user', { 'id': 1, 'username': 1 })
   return response.json(notes.map(note => Note.format(note)))
 })
 
@@ -40,8 +40,7 @@ notesRouter.post('/', async (request, response) => {
 
   try {
     const token = getTokenFrom(request)
-    const decodedToken = jwt.verify(token, process.env.SECRET)
-
+    const decodedToken = jwt.verify(token, process.env.SECRET_KEY)
     if (!token || !decodedToken.id) {
       return response.status(401).json({
         error: 'token missing or invalid'
@@ -52,12 +51,12 @@ notesRouter.post('/', async (request, response) => {
       return response.status(400).json({ error: 'content missing' })
     }
 
+    const user = await User.findOne({ _id: decodedToken.id })
     const date = new Date()
-    const user = await User.findById(body.userID)
 
     const note = new Note({
       title: body.title,
-      user: user._id,
+      user: user.id,
       content: body.content,
       important: body.important || false,
       created: date,
@@ -89,6 +88,7 @@ notesRouter.put('/:id', async (request, response) => {
       return response.status(400).json({ error: 'content missing' })
     }
 
+    console.log(body.user)
     const note = {
       title: body.title,
       user: body.user,
@@ -113,7 +113,12 @@ notesRouter.put('/:id', async (request, response) => {
 // delete note
 notesRouter.delete('/:id', async (request, response) => {
   try {
-    await Note.findByIdAndRemove(request.params.id)
+    const note = await Note.findByIdAndRemove(request.params.id)
+    const user = await User.findOne({ _id: note.user })
+
+    user.notes = user.notes.filter(n => n._id.toString() !== note.id)
+    await user.save()
+
     return response.status(204).end()
   } catch (exception) {
     return response.status(400).send({ error: 'malformed id' })

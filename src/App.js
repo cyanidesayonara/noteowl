@@ -1,7 +1,8 @@
 import React, { Component } from 'react'
-import FilterNotes from './components/FilterNotes.js'
+import Navbar from './components/Navbar.js'
 import Notes from './components/Notes.js'
 import noteService from './services/notes.js'
+import loginService from './services/login.js'
 import update from 'immutability-helper'
 import ReactGA from 'react-ga'
 
@@ -13,7 +14,8 @@ class App extends Component {
       filter: '',
       username: '',
       password: '',
-      user: null
+      user: null,
+      loginMessage: null
     }
   }
 
@@ -34,15 +36,56 @@ class App extends Component {
 
   componentDidMount() {
     document.title = 'NoteOwl'
+
+    // load notes
     noteService
       .getAll()
       .then(notes => { this.setState({ notes: notes }) })
+    
+    // sve user to local storage
+    const loggedUserJSON = window.localStorage.getItem('user')
+    if (loggedUserJSON) {
+      const user = JSON.parse(loggedUserJSON)
+      this.setState({ user: user })
+      noteService.setToken(user.token)
+    }
+
+    // initialize GA
     ReactGA.initialize('UA-120584024-4')
     ReactGA.pageview('/')
   }
 
-  login = (event) => {
+  logout = async (event) => {
     event.preventDefault()
+    
+    try {
+      noteService.removeToken(this.state.user.token)
+      window.localStorage.removeItem('user')
+      this.setState({ user: null })
+    } catch (exception) {
+      this.setState({ user: null })
+    }
+  }
+
+  login = async (event) => {
+    event.preventDefault()
+
+    try {
+      const user = await loginService.login({
+        username: this.state.username,
+        password: this.state.password
+      })
+
+      window.localStorage.setItem('user', JSON.stringify(user))
+      noteService.setToken(user.token)
+
+      this.setState({ user: user, username: '', password: ''})
+    } catch (exception) {
+      this.setState({ loginMessage: 'Username and/or password incorrect' })
+      setTimeout(() => {
+        this.setState({ loginMessage: null })
+      }, 3000)
+    }
   }
 
   newNote = () => {
@@ -58,14 +101,15 @@ class App extends Component {
         position: {
           x: 0,
           y: 0
-        }
+        },
+        user: 0
       }
       this.setState({ notes: this.state.notes.concat(note) })
     }
   }
 
   saveNote = (note) => () => {
-    if (!note.author) {
+    if (this.state.user) {
       if (note.title && note.content) {
         if (note.id === 0) {
           noteService
@@ -153,40 +197,24 @@ class App extends Component {
     )
     return (
       <div id='content'>
-        <nav>
-          <h1>
-            Noteowl
-          </h1>
-          <button onClick={ this.newNote }>
-            Add New Note
-          </button>
-          <FilterNotes
-            filterValue={ this.state.filter }
-            handleInputChange={ this.handleInputChange }
-          />
-          <form onSubmit={ this.login }>
-            <input
-              type='text'
-              placeholder='Username'
-              name='username'
-              value={ this.state.username }
-              onChange={ this.handleInputChange(null) }
-            />
-            <input
-              type='password'
-              placeholder='Password'
-              name='password'
-              value={ this.state.password }
-              onChange={ this.handleInputChange(null) }
-            />
-            <button type='submit'>Login</button>
-          </form>
-        </nav>
+        <Navbar
+          title="Noteowl"
+          login={ this.login }
+          logout={ this.logout }
+          newNote={ this.newNote }
+          handleInputChange={ this.handleInputChange }
+          filter={ this.state.filter }
+          username={ this.state.username }
+          password={ this.state.password }
+          user={ this.state.user }
+          loginMessage={ this.state.loginMessage }
+        /> 
         <Notes
           notes={ notes }
           handleRemove={ this.handleRemove }
           handleDrag={ this.handleDrag }
           saveNote={ this.saveNote }
+          user={ this.state.user }
           handleInputChange={ this.handleInputChange }
         />
       </div>

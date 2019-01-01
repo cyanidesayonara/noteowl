@@ -3,6 +3,7 @@ import Note from './Note'
 
 const Notes = ({
   notes,
+  user,
   handleRemove,
   handleDrag,
   saveNote,
@@ -14,6 +15,7 @@ const Notes = ({
         <Note
           key={ note.id }
           note={ note }
+          user={ user }
           handleRemove={ handleRemove }
           handleDrag={ handleDrag }
           saveNote={ saveNote }

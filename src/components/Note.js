@@ -7,6 +7,7 @@ import Delete from './Delete'
 
 const Note = ({
   note,
+  user,
   handleRemove,
   handleDrag,
   saveNote,
@@ -46,7 +47,7 @@ const Note = ({
             />
             <span className='border'></span>
           </p>
-          <Delete note={ note } handleRemove={ handleRemove } />
+          <Delete user={ user } note={ note } handleRemove={ handleRemove } />
         </form>
       </div>
     </Draggable>

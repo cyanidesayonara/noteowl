@@ -2,16 +2,18 @@ import React from 'react'
 
 const Delete = ({
   note,
+  user,
   handleRemove,
 }) => {
-  if (note.author !== '') {
+  if (note.user === 0 || user && note.user === user.id) {
+    return (
+      <button type='button' onClick={ handleRemove(note) }>
+        Delete
+      </button>
+    )
+  } else {
     return null
   }
-  return (
-    <button type='button' onClick={ handleRemove(note) }>
-      Delete
-    </button>
-  )
 }
 
 export default Delete

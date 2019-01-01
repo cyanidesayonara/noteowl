@@ -1,11 +1,11 @@
 import React from 'react'
 
-const FilterNotes = ({ filterValue, handleInputChange }) => {
+const FilterNotes = ({ filter, handleInputChange }) => {
   return (
     <div className='d-none'>
       <input
         placeholder='Filter notes'
-        value={ filterValue }
+        value={ filter }
         name='filter'
         onChange={ handleInputChange(null) }
       />
