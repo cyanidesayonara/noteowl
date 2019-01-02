@@ -4,6 +4,9 @@
   "private": true,
   "description": "Note-taking app with calendar",
   "main": "index.js",
+  "engines": {
+    "node": "10.15.0"
+  },
   "eslintConfig": {
     "extends": "react-app"
   },
