@@ -82,9 +82,7 @@ class App extends Component {
       this.setState({ user: user, username: '', password: ''})
     } catch (exception) {
       this.setState({ loginMessage: 'Username and/or password incorrect' })
-      setTimeout(() => {
-        this.setState({ loginMessage: null })
-      }, 3000)
+      setTimeout(() => { this.setState({ loginMessage: null }) }, 3000)
     }
   }
 
@@ -150,7 +148,6 @@ class App extends Component {
               this.setState({ notes: notes })
             })
             .catch(error => {
-              console.log(error)
               const notes = this.state.notes.filter(n => n.id !== note.id)
               this.setState({ notes: notes })
             })
