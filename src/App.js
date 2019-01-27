@@ -107,8 +107,8 @@ class App extends Component {
   }
 
   saveNote = (note) => () => {
-    if (this.state.user) {
-      if (note.title && note.content) {
+    if (note.title && note.content) {
+      if (this.state.user) {
         if (note.id === 0) {
           noteService
             .create(note)
@@ -130,6 +130,13 @@ class App extends Component {
             })
             .catch(error => { console.log(error) })
         }
+      } else {
+        note.notification = 'Login to save note'
+        const notes = this.state.notes.filter(n => n.id !== note.id)
+        this.setState({
+          notes: notes.concat(note)
+        })
+        this.hideNotification(note)
       }
     }
   }
