@@ -68,6 +68,7 @@ button:focus {
   min-height: 100vh;
   text-align: center;
   position: relative;
+  display: flex;
 }
 .note {
   width: 220px;
@@ -79,7 +80,6 @@ button:focus {
   margin: 10px auto;
   box-shadow: rgba(0, 0, 0, .3) 0 0 10px;
   cursor: move;
-  background: #FFFF88;
 }
 .notification {
   position: absolute;
@@ -132,4 +132,43 @@ button:focus {
 @keyframes toTop {
   0%   { z-index: 0; }
   100% { z-index: 9000; }
+}
+
+.color-yellow {
+  background: #FFFF88;
+}
+.color-blue {
+  background: #88FFFF;
+}
+.color-red {
+  background: #FF8888;
+}
+.color-green {
+  background: #88FF88;
+}
+.note-controls {
+  display: flex;
+}
+.color-changer {
+  align-self: flex-end;
+  margin: 5px;
+}
+.color-input {
+  display: inline-block;
+  margin: 5px;
+  border-radius: 50%;
+  border: 1px solid black;
+}
+.note-date {
+  color: #666;
+}
+
+@media only screen and (max-width: 600px) {
+  #notes {
+    display: block;
+  }
+  .note {
+    position: unset;
+    transform: translate(0)!important;
+  }
 }

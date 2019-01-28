@@ -41,7 +41,7 @@ class App extends Component {
     noteService
       .getAll()
       .then(notes => { this.setState({ notes: notes }) })
-    
+
     // sve user to local storage
     const loggedUserJSON = window.localStorage.getItem('user')
     if (loggedUserJSON) {
@@ -57,7 +57,7 @@ class App extends Component {
 
   logout = async (event) => {
     event.preventDefault()
-    
+
     try {
       noteService.removeToken(this.state.user.token)
       window.localStorage.removeItem('user')
@@ -96,11 +96,9 @@ class App extends Component {
         updated: null,
         important: false,
         notification: null,
-        position: {
-          x: 0,
-          y: 0
-        },
-        user: 0
+        position: { x: 0, y: 0 },
+        user: 0,
+        color: 'yellow',
       }
       this.setState({ notes: this.state.notes.concat(note) })
     }
@@ -133,9 +131,7 @@ class App extends Component {
       } else {
         note.notification = 'Login to save note'
         const notes = this.state.notes.filter(n => n.id !== note.id)
-        this.setState({
-          notes: notes.concat(note)
-        })
+        this.setState({ notes: notes.concat(note) })
         this.hideNotification(note)
       }
     }
@@ -146,7 +142,7 @@ class App extends Component {
       if (window.confirm('Are you sure you want to remove this note?')) {
         if (note.id === 0) {
           const notes = this.state.notes.filter(n => n.id !== note.id)
-          this.setState({ notes: notes })          
+          this.setState({ notes: notes })
         } else {
           noteService
             .remove(note)
@@ -166,10 +162,7 @@ class App extends Component {
   handleDrag = (note) => (event, ui) => {
     const notes = this.state.notes.filter(n => n.id !== note.id)
     if (!note.position) {
-      note.position = {
-        x: 0,
-        y: 0
-      }
+      note.position = { x: 0, y: 0 }
     }
     note.position = {
       x: +note.position.x + +ui.deltaX.toFixed(0),
@@ -212,7 +205,7 @@ class App extends Component {
           password={ this.state.password }
           user={ this.state.user }
           loginMessage={ this.state.loginMessage }
-        /> 
+        />
         <Notes
           notes={ notes }
           handleRemove={ this.handleRemove }

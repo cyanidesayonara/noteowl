@@ -8,7 +8,8 @@ const noteSchema = new mongoose.Schema({
   updated: Date,
   important: Boolean,
   notification: String,
-  position: Object
+  position: Object,
+  color: String,
 })
 
 noteSchema.statics.format = (note) => {
@@ -22,6 +23,7 @@ noteSchema.statics.format = (note) => {
     important: note.important,
     notification: note.notification,
     position: note.position,
+    color: note.color,
   }
 }
 

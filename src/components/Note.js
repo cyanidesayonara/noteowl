@@ -2,8 +2,8 @@ import React from 'react'
 import TextareaAutosize from 'react-autosize-textarea'
 import Draggable from 'react-draggable'
 import Notification from './Notification'
-import Date from './Date'
-import Delete from './Delete'
+import NoteDate from './NoteDate'
+import NoteControls from './NoteControls.js'
 
 const Note = ({
   note,
@@ -12,7 +12,13 @@ const Note = ({
   handleDrag,
   saveNote,
   handleInputChange,
+  index,
+  colors,
 }) => {
+  const zIndex = 8000 + index
+  const divStyle = {
+    zIndex: zIndex,
+  }
   return (
     <Draggable
       cancel='.note form>*'
@@ -21,7 +27,10 @@ const Note = ({
       onStop={ saveNote(note) }
       onDrag={ handleDrag(note) }
     >
-      <div className='note'>
+      <div
+        className={ 'note color-' + note.color }
+        style={ divStyle }
+      >
         <Notification message={ note.notification } />
         <form onSubmit={ saveNote(note) }>
           <h3>
@@ -35,8 +44,8 @@ const Note = ({
             />
             <span className='border'></span>
           </h3>
-          <Date text='Created: ' date={ note.created } />
-          <Date text='Saved: ' date={ note.updated } />
+          <NoteDate text='Created: ' date={ note.created } />
+          <NoteDate text='Saved: ' date={ note.updated } />
           <p>
             <TextareaAutosize
               onBlur={ saveNote(note) }
@@ -48,7 +57,14 @@ const Note = ({
             />
             <span className='border'></span>
           </p>
-          <Delete user={ user } note={ note } handleRemove={ handleRemove } />
+          <NoteControls
+            user={ user }
+            note={ note }
+            handleRemove={ handleRemove }
+            colors={ colors }
+            handleInputChange={ handleInputChange }
+            saveNote={ saveNote }
+          / >
         </form>
       </div>
     </Draggable>

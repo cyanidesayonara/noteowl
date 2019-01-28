@@ -9,9 +9,10 @@ const Notes = ({
   saveNote,
   handleInputChange
 }) => {
+  const colors = ['yellow', 'blue', 'red', 'green',]
   return (
     <div id='notes'>
-      { notes.map(note =>
+      { notes.map((note, index) =>
         <Note
           key={ note.id }
           note={ note }
@@ -20,6 +21,8 @@ const Notes = ({
           handleDrag={ handleDrag }
           saveNote={ saveNote }
           handleInputChange={ handleInputChange }
+          index={ index }
+          colors={ colors }
         />
       ) }
     </div>

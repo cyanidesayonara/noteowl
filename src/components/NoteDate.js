@@ -1,16 +1,16 @@
 import React from 'react'
 import Moment from 'react-moment'
 
-const Date = ({ text, date }) => {
+const NoteDate = ({ text, date }) => {
   if (date === null) {
     return null
   }
   return (
-    <div>
+    <div className='note-date'>
       <span>{ text }</span>
       <Moment format='ddd DD MMM YYYY HH:mm'>{ date }</Moment>
     </div>
   )
 }
 
-export default Date
+export default NoteDate

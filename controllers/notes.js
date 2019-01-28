@@ -61,7 +61,8 @@ notesRouter.post('/', async (request, response) => {
       created: body.created,
       updated: new Date(),
       notification: null,
-      position: body.position
+      position: body.position,
+      color: body.color,
     })
 
     const savedNote = await note.save()
@@ -95,7 +96,8 @@ notesRouter.put('/:id', async (request, response) => {
       created: body.created,
       updated: new Date(),
       notification: null,
-      position: body.position
+      position: body.position,
+      color: body.color,
     }
 
     const updatedNote = await Note.findByIdAndUpdate(
