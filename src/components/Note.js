@@ -33,30 +33,30 @@ const Note = ({
       >
         <Notification message={ note.notification } />
         <form onSubmit={ saveNote(note) }>
-          <h3>
+          <div className='owl-field'>
             <TextareaAutosize
               onBlur={ saveNote(note) }
               onResize={(e) => {}}
               value={ note.title }
-              name="title"
+              name='title'
               placeholder='Title'
               onChange={ handleInputChange(note) }
             />
             <span className='border'></span>
-          </h3>
+          </div>
           <NoteDate text='Created: ' date={ note.created } />
           <NoteDate text='Saved: ' date={ note.updated } />
-          <p>
+          <div className='owl-field'>
             <TextareaAutosize
               onBlur={ saveNote(note) }
               onResize={(e) => {}}
               value={ note.content }
-              name="content"
+              name='content'
               placeholder='Add text here'
               onChange={ handleInputChange(note) }
             />
             <span className='border'></span>
-          </p>
+          </div>
           <NoteControls
             user={ user }
             note={ note }
@@ -64,7 +64,7 @@ const Note = ({
             colors={ colors }
             handleInputChange={ handleInputChange }
             saveNote={ saveNote }
-          / >
+          />
         </form>
       </div>
     </Draggable>

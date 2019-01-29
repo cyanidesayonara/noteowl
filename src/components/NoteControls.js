@@ -11,9 +11,7 @@ const NoteControls = ({
   colors,
 }) => {
   return (
-    <div
-      className='note-controls'
-    >
+    <div className='note-controls'>
       <Delete
         note={ note }
         user={ user }

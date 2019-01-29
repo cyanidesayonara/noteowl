@@ -7,7 +7,6 @@ const Navbar = ({
   title,
   login,
   logout,
-  newNote,
   filterValue,
   handleInputChange,
   username,
@@ -24,9 +23,6 @@ const Navbar = ({
         filterValue={ filterValue }
         handleInputChange={ handleInputChange }
       />
-      <button onClick={ newNote } type='button'>
-        New note
-      </button>
       {
         user === null &&
         <LoginForm

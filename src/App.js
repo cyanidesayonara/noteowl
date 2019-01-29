@@ -24,8 +24,7 @@ class App extends Component {
     const timeout = 3000
     setTimeout(() => {
       const index = this.state.notes.findIndex(n => n.id === note.id)
-      // if note not found, index will be -1
-      if (index >= 0) {
+      if (index) {
         const notes = update(this.state.notes, {
           [index]: { ['notification']: { $set: null } }
         })
@@ -81,7 +80,10 @@ class App extends Component {
 
       this.setState({ user: user, username: '', password: ''})
     } catch (exception) {
-      this.setState({ loginMessage: 'Username and/or password incorrect' })
+      this.setState({ 
+        loginMessage: 'Username and/or password incorrect',
+        password: '',
+      })
       setTimeout(() => { this.setState({ loginMessage: null }) }, 3000)
     }
   }
@@ -89,7 +91,7 @@ class App extends Component {
   newNote = () => {
     if (!this.state.notes.find(n => n.id === 0)) {
       const note = {
-        id: 0,
+        id: null,
         title: '',
         content: '',
         created: new Date(),
@@ -97,7 +99,7 @@ class App extends Component {
         important: false,
         notification: null,
         position: { x: 0, y: 0 },
-        user: 0,
+        user: null,
         color: 'yellow',
       }
       this.setState({ notes: this.state.notes.concat(note) })
@@ -107,7 +109,7 @@ class App extends Component {
   saveNote = (note) => () => {
     if (note.title && note.content) {
       if (this.state.user) {
-        if (note.id === 0) {
+        if (note.id === null) {
           noteService
             .create(note)
             .then(createdNote => {
@@ -198,16 +200,16 @@ class App extends Component {
           title="Noteowl"
           login={ this.login }
           logout={ this.logout }
-          newNote={ this.newNote }
           handleInputChange={ this.handleInputChange }
           filter={ this.state.filter }
           username={ this.state.username }
           password={ this.state.password }
           user={ this.state.user }
           loginMessage={ this.state.loginMessage }
-        />
+          />
         <Notes
           notes={ notes }
+          newNote={ this.newNote }
           handleRemove={ this.handleRemove }
           handleDrag={ this.handleDrag }
           saveNote={ this.saveNote }

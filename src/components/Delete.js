@@ -5,7 +5,7 @@ const Delete = ({
   user,
   handleRemove,
 }) => {
-  if (note.user === 0 || user && note.user === user.id) {
+  if ((user && note.user === user.id) || note.user === null) {
     return (
       <button type='button' onClick={ handleRemove(note) }>
         Delete

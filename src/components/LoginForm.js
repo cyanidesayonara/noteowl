@@ -1,4 +1,6 @@
 import React from 'react'
+import LoginMessage from './LoginMessage.js'
+import LoginField from './LoginField.js'
 
 const LoginForm = ({
   login,
@@ -8,26 +10,26 @@ const LoginForm = ({
   loginMessage
 }) => {
   return (
-    <form onSubmit={ login }>
-      <span>
-        { loginMessage }
-      </span>
-      <input
-        type='text'
-        placeholder='Username'
-        name='username'
-        value={ username }
-        onChange={ handleInputChange(null) }
-      />
-      <input
-        type='password'
-        placeholder='Password'
-        name='password'
-        value={ password }
-        onChange={ handleInputChange(null) }
-      />
-      <button type='submit'>Login</button>
-    </form>
+    <div id='login'>
+      <LoginMessage loginMessage={ loginMessage } />
+      <form onSubmit={ login }>
+        <LoginField
+          type='text'
+          placeholder='Username'
+          name='username'
+          value={ username }
+          handleInputChange ={ handleInputChange }
+        />
+        <LoginField
+          type='password'
+          placeholder='Password'
+          name='password'
+          value={ password }
+          handleInputChange ={ handleInputChange }
+        />
+        <button type='submit'>Login</button>
+      </form>
+    </div>
   )
 }
 

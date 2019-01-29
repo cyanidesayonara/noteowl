@@ -7,11 +7,15 @@ const Notes = ({
   handleRemove,
   handleDrag,
   saveNote,
-  handleInputChange
+  handleInputChange,
+  newNote,
 }) => {
   const colors = ['yellow', 'blue', 'red', 'green',]
   return (
     <div id='notes'>
+      <button onClick={ newNote } type='button'>
+        New note
+      </button>
       { notes.map((note, index) =>
         <Note
           key={ note.id }
@@ -24,7 +28,7 @@ const Notes = ({
           index={ index }
           colors={ colors }
         />
-      ) }
+      ) }   
     </div>
   )
 }

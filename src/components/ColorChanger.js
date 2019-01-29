@@ -15,9 +15,7 @@ const ColorChanger = ({
             checked = true
           }
           return (
-            <div
-              className={ 'color-input color-' + color }
-            >
+            <div className={ 'color-input color-' + color }>
               <input
                 name='color'
                 value={ color }
@@ -26,6 +24,7 @@ const ColorChanger = ({
                 type='checkbox'
                 checked={ checked }
               />
+              <label class='checkmark'></label>
             </div>
           )
         })
