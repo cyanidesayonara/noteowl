@@ -15,17 +15,17 @@ const ColorChanger = ({
             checked = true
           }
           return (
-            <div className={ 'color-input color-' + color }>
+            <label className={ 'color-input color-' + color }>
               <input
                 name='color'
                 value={ color }
-                onMouseDown={ handleInputChange(note) }
-                onMouseUp={ saveNote(note) }
                 type='checkbox'
                 checked={ checked }
+                onChange={ saveNote(note) }
+                onClick={ handleInputChange(note) }
               />
-              <label class='checkmark'></label>
-            </div>
+              <span className='checkmark'></span>
+            </label>
           )
         })
       }

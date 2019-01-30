@@ -36,11 +36,6 @@ class App extends Component {
   componentDidMount() {
     document.title = 'NoteOwl'
 
-    // load notes
-    noteService
-      .getAll()
-      .then(notes => { this.setState({ notes: notes }) })
-
     // sve user to local storage
     const loggedUserJSON = window.localStorage.getItem('user')
     if (loggedUserJSON) {
@@ -48,6 +43,11 @@ class App extends Component {
       this.setState({ user: user })
       noteService.setToken(user.token)
     }
+
+    // load notes
+    noteService
+      .getAll()
+      .then(notes => { this.setState({ notes: notes }) })
 
     // initialize GA
     ReactGA.initialize('UA-120584024-4')
