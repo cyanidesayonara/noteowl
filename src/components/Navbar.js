@@ -1,10 +1,10 @@
 import React from 'react'
+import Logo from './Logo.js'
 import FilterNotes from './FilterNotes.js'
 import LoginForm from './LoginForm.js'
 import LogoutForm from './LogoutForm.js'
 
 const Navbar = ({
-  title,
   login,
   logout,
   filterValue,
@@ -12,13 +12,11 @@ const Navbar = ({
   username,
   password,
   user,
-  loginMessage
+  loginMessage,
 }) => {
   return (
-    <nav>
-      <h1>
-        { title }
-      </h1>
+    <nav className='navbar'>
+      <Logo />
       <FilterNotes
         filterValue={ filterValue }
         handleInputChange={ handleInputChange }

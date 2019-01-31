@@ -197,7 +197,6 @@ class App extends Component {
     return (
       <div id='content'>
         <Navbar
-          title="Noteowl"
           login={ this.login }
           logout={ this.logout }
           handleInputChange={ this.handleInputChange }
@@ -206,7 +205,7 @@ class App extends Component {
           password={ this.state.password }
           user={ this.state.user }
           loginMessage={ this.state.loginMessage }
-          />
+        />
         <Notes
           notes={ notes }
           newNote={ this.newNote }

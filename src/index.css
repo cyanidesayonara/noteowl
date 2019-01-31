@@ -1,6 +1,9 @@
+@import url('https://fonts.googleapis.com/css?family=Coda');
+
 html {
   box-sizing: border-box;
 }
+*,
 *:before,
 *:after {
   box-sizing: inherit;
@@ -13,13 +16,17 @@ body {
     sans-serif;
   -webkit-font-smoothing: antialiased;
   -moz-osx-font-smoothing: grayscale;
+  font-family: 'Coda', cursive;
 }
 
 code {
   font-family: source-code-pro, Menlo, Monaco, Consolas, "Courier New",
     monospace;
 }
-nav {
+.navbar {
+  display: flex;
+  justify-content: center;
+  align-items: center;
   top: 0;
   position: fixed;
   z-index: 9001;
@@ -30,8 +37,11 @@ nav {
   box-shadow: rgba(0,0,0,.3) 0 0 10px;
 }
 
-nav > * {
-  display: inline-block;
+.logo {
+  border: 2px solid black;
+  padding: 3px;
+  border-radius: 2px;
+  margin-right: 10px;
 }
 
 ul {
@@ -50,19 +60,18 @@ button {
   display: none;
 }
 #notes {
-  padding-top: 79px;
+  padding: 100px 10px 10px;
   min-height: 100vh;
   text-align: center;
   position: relative;
 }
 .note {
-  width: 220px;
+  width: 280px;
   position: absolute;
   text-align: left;
   left: calc(50% - 130px);
   border-radius: 2px;
   padding: 20px;
-  margin: 10px;
   box-shadow: rgba(0, 0, 0, .3) 0 0 10px;
   cursor: move;
 }
@@ -79,10 +88,10 @@ button {
   margin: 10px 0;
 }
 .note textarea {
-  resize: none!important;
-  font-size: inherit;
-  font-weight: inherit;
   font-family: inherit;
+  resize: none!important;
+  font-size: 24px;
+  font-weight: inherit;
   width: 100%;
   outline: none;
   padding: 0;
@@ -134,16 +143,16 @@ button {
   display: flex;
 }
 .color-changer {
-  align-self: flex-end;
-  margin: 5px;
+  justify-self: flex-end;
 }
 .color-input {
   display: inline-block;
   margin: 5px;
   border-radius: 50%;
-  border: 1px solid black;
+  border: 2px solid black;
 }
 .note-date {
+  pointer-events: none;
   color: #666;
   font-size: 12px;
 }
@@ -169,11 +178,11 @@ button {
 [type=checkbox]:checked+.checkmark::after {
   content: '';
   position: absolute;
-  width: 13px;
-  height: 8px;
+  width: 14px;
+  height: 9px;
   background: 0 0;
-  top: 4px;
-  left: 4px;
+  top: 5px;
+  left: 5px;
   border-top: none;
   border-right: none;
   -webkit-transform: rotate(-45deg);
@@ -192,7 +201,7 @@ button {
 
 @media only screen and (max-width: 600px) {
   .note {
-    margin: 10px auto;
+    margin: 20px auto;
     position: unset;
     transform: translate(0)!important;
   }
