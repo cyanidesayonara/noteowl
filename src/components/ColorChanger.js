@@ -4,7 +4,6 @@ const ColorChanger = ({
   colors,
   note,
   handleInputChange,
-  saveNote,
 }) => {
   return (
     <div className='color-changer' >
@@ -22,7 +21,6 @@ const ColorChanger = ({
                 type='checkbox'
                 checked={ checked }
                 onChange={ handleInputChange(note) }
-                onMouseUp={ saveNote(note) }
               />
               <span className='checkmark'></span>
             </label>

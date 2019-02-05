@@ -7,7 +7,6 @@ const NoteControls = ({
   note,
   handleRemove,
   handleInputChange,
-  saveNote,
   colors,
 }) => {
   return (
@@ -21,7 +20,6 @@ const NoteControls = ({
         note={ note } 
         handleInputChange={ handleInputChange }
         colors={ colors }
-        saveNote={ saveNote }
       />
     </div>
   )

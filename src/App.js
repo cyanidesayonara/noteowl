@@ -80,7 +80,7 @@ class App extends Component {
 
       this.setState({ user: user, username: '', password: ''})
     } catch (exception) {
-      this.setState({ 
+      this.setState({
         loginMessage: 'Username and/or password incorrect',
         password: '',
       })
@@ -106,37 +106,47 @@ class App extends Component {
     }
   }
 
-  saveNote = (note) => () => {
-    if (note.title && note.content) {
-      if (this.state.user) {
-        if (note.id === null) {
-          noteService
-            .create(note)
-            .then(createdNote => {
-              createdNote.notification = 'Note saved'
-              const notes = this.state.notes.filter(n => n.id !== 0)
-              this.setState({ notes: notes.concat(createdNote) })
-              this.hideNotification(createdNote)
-            })
-            .catch(error => { console.log(error) })
+  saveNote = (note) => {
+    const timeout = 3000
+    setTimeout(() => {
+      if (note.title && note.content) {
+        if (this.state.user) {
+          if (note.id === null) {
+            noteService
+              .create(note)
+              .then(createdNote => {
+                createdNote.notification = 'Note saved'
+                const index = this.state.notes.findIndex(n => n.id === 0)
+                const notes = update(this.state.notes, {
+                  [index]: { $set: createdNote }
+                })
+                this.setState({ notes: notes })
+                this.hideNotification(createdNote)
+              })
+              .catch(error => { console.log(error) })
+          } else {
+            noteService
+              .update(note)
+              .then(updatedNote => {
+                updatedNote.notification = 'Note saved'
+                const index = this.state.notes.findIndex(n => n.id === updatedNote.id)
+                const notes = update(this.state.notes, {
+                  [index]: { $set: updatedNote } })
+                this.setState({ notes: notes })
+                this.hideNotification(updatedNote)
+              })
+              .catch(error => { console.log(error) })
+          }
         } else {
-          noteService
-            .update(note)
-            .then(updatedNote => {
-              updatedNote.notification = 'Note saved'
-              const notes = this.state.notes.filter(n => n.id !== updatedNote.id)
-              this.setState({ notes: notes.concat(updatedNote) })
-              this.hideNotification(updatedNote)
-            })
-            .catch(error => { console.log(error) })
+          note.notification = 'Login to save note'
+          const index = this.state.notes.findIndex(n => n.id === note.id)
+          const notes = update(this.state.notes, {
+            [index]: { $set: note } })
+          this.setState({ notes: notes })
+          this.hideNotification(note)
         }
-      } else {
-        note.notification = 'Login to save note'
-        const notes = this.state.notes.filter(n => n.id !== note.id)
-        this.setState({ notes: notes.concat(note) })
-        this.hideNotification(note)
       }
-    }
+    }, timeout)
   }
 
   handleRemove = (note) => () => {
@@ -162,15 +172,20 @@ class App extends Component {
   }
 
   handleDrag = (note) => (event, ui) => {
-    const notes = this.state.notes.filter(n => n.id !== note.id)
-    if (!note.position) {
-      note.position = { x: 0, y: 0 }
-    }
-    note.position = {
+    const position = {
       x: +note.position.x + +ui.deltaX.toFixed(0),
       y: +note.position.y + +ui.deltaY.toFixed(0)
     }
-    this.setState({ notes: notes.concat(note) })
+    const index = this.state.notes.findIndex(n => n.id === note.id)
+    const notes = update(this.state.notes, {
+      [index]: {
+        ['position']: {
+          $set: position
+        }
+      }
+    })
+    this.setState({ notes: notes })
+    this.saveNote(note)
   }
 
   handleInputChange = (note) => {
@@ -183,6 +198,7 @@ class App extends Component {
           [index]: { [name]: { $set: value } }
         })
         this.setState({ notes: notes })
+        this.saveNote(note)
       } else {
         this.setState({ [name]: value })
       }
@@ -211,7 +227,6 @@ class App extends Component {
           newNote={ this.newNote }
           handleRemove={ this.handleRemove }
           handleDrag={ this.handleDrag }
-          saveNote={ this.saveNote }
           user={ this.state.user }
           handleInputChange={ this.handleInputChange }
         />

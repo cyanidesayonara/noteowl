@@ -10,7 +10,6 @@ const Note = ({
   user,
   handleRemove,
   handleDrag,
-  saveNote,
   handleInputChange,
   index,
   colors,
@@ -24,7 +23,6 @@ const Note = ({
       cancel='.note form>*'
       position={ note.position }
       bounds='parent'
-      onStop={ saveNote(note) }
       onDrag={ handleDrag(note) }
     >
       <div
@@ -32,10 +30,9 @@ const Note = ({
         style={ divStyle }
       >
         <Notification message={ note.notification } />
-        <form onSubmit={ saveNote(note) }>
+        <form>
           <div className='owl-field'>
             <TextareaAutosize
-              onBlur={ saveNote(note) }
               onResize={(e) => {}}
               value={ note.title }
               name='title'
@@ -48,7 +45,6 @@ const Note = ({
           <NoteDate text='Saved: ' date={ note.updated } />
           <div className='owl-field'>
             <TextareaAutosize
-              onBlur={ saveNote(note) }
               onResize={(e) => {}}
               value={ note.content }
               name='content'
@@ -63,7 +59,6 @@ const Note = ({
             handleRemove={ handleRemove }
             colors={ colors }
             handleInputChange={ handleInputChange }
-            saveNote={ saveNote }
           />
         </form>
       </div>
