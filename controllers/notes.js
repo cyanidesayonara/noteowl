@@ -73,7 +73,7 @@ notesRouter.post('/', async (request, response) => {
   } catch (exception) {
     if (exception.name === 'JsonWebTokenError' ) {
       response.status(401).json({ error: exception.message })
-    } else {    
+    } else {
       return response.status(500).send({ error: 'something went wrong...' })
     }
   }

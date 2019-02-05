@@ -107,16 +107,17 @@ class App extends Component {
   }
 
   saveNote = (note) => {
-    const timeout = 3000
-    setTimeout(() => {
-      if (note.title && note.content) {
+    if (note.title && note.content) {
+      clearTimeout(note.saveTimeout)
+      note.saveTimeout = setTimeout(() => {
+        console.log(note)
         if (this.state.user) {
           if (note.id === null) {
             noteService
               .create(note)
               .then(createdNote => {
                 createdNote.notification = 'Note saved'
-                const index = this.state.notes.findIndex(n => n.id === 0)
+                const index = this.state.notes.findIndex(n => n.id === null)
                 const notes = update(this.state.notes, {
                   [index]: { $set: createdNote }
                 })
@@ -145,14 +146,15 @@ class App extends Component {
           this.setState({ notes: notes })
           this.hideNotification(note)
         }
-      }
-    }, timeout)
+      }, 3000)
+    }
   }
 
   handleRemove = (note) => () => {
     if (!note.author) {
       if (window.confirm('Are you sure you want to remove this note?')) {
-        if (note.id === 0) {
+        clearTimeout(note.saveTimeout)
+        if (note.id === null) {
           const notes = this.state.notes.filter(n => n.id !== note.id)
           this.setState({ notes: notes })
         } else {
@@ -178,11 +180,7 @@ class App extends Component {
     }
     const index = this.state.notes.findIndex(n => n.id === note.id)
     const notes = update(this.state.notes, {
-      [index]: {
-        ['position']: {
-          $set: position
-        }
-      }
+      [index]: { ['position']: { $set: position } }
     })
     this.setState({ notes: notes })
     this.saveNote(note)
