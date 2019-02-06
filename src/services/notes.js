@@ -1,4 +1,5 @@
 import axios from 'axios'
+
 const baseUrl = '/notes'
 
 let token = null
@@ -23,13 +24,13 @@ const create = async (note) => {
 }
 
 const update = async (note) => {
-  const config = { headers: { 'Authorization': token } }  
+  const config = { headers: { 'Authorization': token } }
   const response = await axios.put(`${baseUrl}/${note.id}`, note, config)
   return response.data
 }
 
 const remove = async (note) => {
-  const config = { headers: { 'Authorization': token } }  
+  const config = { headers: { 'Authorization': token } }
   const response = await axios.delete(`${baseUrl}/${note.id}`, config)
   return response.data
 }

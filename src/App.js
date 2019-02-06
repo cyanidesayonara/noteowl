@@ -21,22 +21,21 @@ class App extends Component {
 
   // set notification to null after timeout
   hideNotification = (note) => {
-    const timeout = 3000
     setTimeout(() => {
       const index = this.state.notes.findIndex(n => n.id === note.id)
-      if (index) {
+      if (index > -1) {
         const notes = update(this.state.notes, {
           [index]: { ['notification']: { $set: null } }
         })
         this.setState({ notes: notes })
       }
-    }, timeout)
+    }, 3000)
   }
 
   componentDidMount() {
     document.title = 'NoteOwl'
 
-    // sve user to local storage
+    // save user to local storage
     const loggedUserJSON = window.localStorage.getItem('user')
     if (loggedUserJSON) {
       const user = JSON.parse(loggedUserJSON)
@@ -108,9 +107,9 @@ class App extends Component {
 
   saveNote = (note) => {
     if (note.title && note.content) {
-      clearTimeout(note.saveTimeout)
-      note.saveTimeout = setTimeout(() => {
-        console.log(note)
+      console.log(note)
+      clearTimeout(note.to)
+      note.to = setTimeout(() => {
         if (this.state.user) {
           if (note.id === null) {
             noteService
@@ -186,20 +185,18 @@ class App extends Component {
     this.saveNote(note)
   }
 
-  handleInputChange = (note) => {
-    return (event) => {
-      const value = event.target.value
-      const name = event.target.name
-      if (note) {
-        const index = this.state.notes.findIndex(n => n.id === note.id)
-        const notes = update(this.state.notes, {
-          [index]: { [name]: { $set: value } }
-        })
-        this.setState({ notes: notes })
-        this.saveNote(note)
-      } else {
-        this.setState({ [name]: value })
-      }
+  handleInputChange = (note) => (event) => {
+    const value = event.target.value
+    const name = event.target.name
+    if (note) {
+      const index = this.state.notes.findIndex(n => n.id === note.id)
+      const notes = update(this.state.notes, {
+        [index]: { [name]: { $set: value } }
+      })
+      this.setState({ notes: notes })
+      this.saveNote(note)
+    } else {
+      this.setState({ [name]: value })
     }
   }
 
