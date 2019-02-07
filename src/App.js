@@ -19,6 +19,8 @@ class App extends Component {
     }
   }
 
+  timeouts = {}
+
   // set notification to null after timeout
   hideNotification = (note) => {
     setTimeout(() => {
@@ -88,7 +90,7 @@ class App extends Component {
   }
 
   newNote = () => {
-    if (!this.state.notes.find(n => n.id === 0)) {
+    if (!this.state.notes.find(n => n.id === null)) {
       const note = {
         id: null,
         title: '',
@@ -107,9 +109,8 @@ class App extends Component {
 
   saveNote = (note) => {
     if (note.title && note.content) {
-      console.log(note)
-      clearTimeout(note.to)
-      note.to = setTimeout(() => {
+      clearTimeout(this.timeouts[note.id])
+      this.timeouts[note.id] = setTimeout(() => {
         if (this.state.user) {
           if (note.id === null) {
             noteService
@@ -145,6 +146,7 @@ class App extends Component {
           this.setState({ notes: notes })
           this.hideNotification(note)
         }
+        delete this.timeouts[note.id]
       }, 3000)
     }
   }
@@ -182,7 +184,7 @@ class App extends Component {
       [index]: { ['position']: { $set: position } }
     })
     this.setState({ notes: notes })
-    this.saveNote(note)
+    this.saveNote(notes[index])
   }
 
   handleInputChange = (note) => (event) => {
@@ -194,7 +196,7 @@ class App extends Component {
         [index]: { [name]: { $set: value } }
       })
       this.setState({ notes: notes })
-      this.saveNote(note)
+      this.saveNote(notes[index])
     } else {
       this.setState({ [name]: value })
     }

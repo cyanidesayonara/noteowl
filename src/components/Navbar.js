@@ -15,7 +15,7 @@ const Navbar = ({
   loginMessage,
 }) => {
   return (
-    <nav className='navbar'>
+    <nav id='navbar'>
       <Logo />
       <FilterNotes
         filterValue={ filterValue }

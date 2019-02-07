@@ -13,20 +13,22 @@ const LoginForm = ({
     <div id='login'>
       <LoginMessage loginMessage={ loginMessage } />
       <form onSubmit={ login }>
-        <LoginField
-          type='text'
-          placeholder='Username'
-          name='username'
-          value={ username }
-          handleInputChange ={ handleInputChange }
-        />
-        <LoginField
-          type='password'
-          placeholder='Password'
-          name='password'
-          value={ password }
-          handleInputChange ={ handleInputChange }
-        />
+        <div>
+          <LoginField
+            type='text'
+            placeholder='Username'
+            name='username'
+            value={ username }
+            handleInputChange ={ handleInputChange }
+          />
+          <LoginField
+            type='password'
+            placeholder='Password'
+            name='password'
+            value={ password }
+            handleInputChange ={ handleInputChange }
+          />
+        </div>
         <button type='submit'>Login</button>
       </form>
     </div>

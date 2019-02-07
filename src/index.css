@@ -23,7 +23,7 @@ code {
   font-family: source-code-pro, Menlo, Monaco, Consolas, "Courier New",
     monospace;
 }
-.navbar {
+#navbar {
   display: flex;
   justify-content: center;
   align-items: center;
@@ -37,11 +37,20 @@ code {
   box-shadow: rgba(0,0,0,.3) 0 0 10px;
 }
 
-.logo {
+#logo {
+  font-size: 12px;
   border: 2px solid black;
   padding: 3px;
   border-radius: 2px;
   margin-right: 10px;
+}
+#login form,
+#logout form {
+  display: flex;
+}
+#login form button,
+#logout form button {
+  margin-left: 10px;
 }
 
 ul {
@@ -54,13 +63,17 @@ button {
   outline: none;
 }
 button {
+  border: 2px solid black;
+  border-radius: 2px;
+  background: transparent;
+  padding: 5px;
   cursor: pointer;
 }
 .d-none {
   display: none;
 }
 #notes {
-  padding: 100px 10px 10px;
+  padding: 91px 10px 10px;
   min-height: 100vh;
   text-align: center;
   position: relative;

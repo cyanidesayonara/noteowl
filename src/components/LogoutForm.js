@@ -6,13 +6,16 @@ const LogoutForm = ({
 }) => {
   return (
     <div id='logout'>
-      <span>
-        Signed in as&nbsp;
-      </span>
-      <span>
-        { user.username }
-      </span>
       <form onSubmit={ logout }>
+        <div>
+          <span>
+            Signed in as
+          </span>
+          <br />
+          <span>
+            { user.username }
+          </span>
+        </div>
         <button type="submit">
           Logout
         </button>
