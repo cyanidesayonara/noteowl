@@ -19,12 +19,11 @@ class App extends Component {
     }
   }
 
-  timeouts = {}
-
   // set notification to null after timeout
   hideNotification = (note) => {
     setTimeout(() => {
       const index = this.state.notes.findIndex(n => n.id === note.id)
+      // index is -1 if note not in notes
       if (index > -1) {
         const notes = update(this.state.notes, {
           [index]: { ['notification']: { $set: null } }
@@ -48,7 +47,7 @@ class App extends Component {
     // load notes
     noteService
       .getAll()
-      .then(notes => { this.setState({ notes: notes }) })
+      .then(notes => this.setState({ notes: notes }))
 
     // initialize GA
     ReactGA.initialize('UA-120584024-4')
@@ -79,13 +78,18 @@ class App extends Component {
       window.localStorage.setItem('user', JSON.stringify(user))
       noteService.setToken(user.token)
 
-      this.setState({ user: user, username: '', password: ''})
+      this.setState({ user: user, username: '', password: '' })
+
+      // if notes are unsaved
+      this.state.notes.map(note =>
+        note.modified === true ? this.saveNote(note) : null
+      )
     } catch (exception) {
       this.setState({
         loginMessage: 'Username and/or password incorrect',
         password: '',
       })
-      setTimeout(() => { this.setState({ loginMessage: null }) }, 3000)
+      setTimeout(() => this.setState({ loginMessage: null }), 3000)
     }
   }
 
@@ -109,8 +113,8 @@ class App extends Component {
 
   saveNote = (note) => {
     if (note.title && note.content) {
-      clearTimeout(this.timeouts[note.id])
-      this.timeouts[note.id] = setTimeout(() => {
+      clearTimeout(note.saveTimeout)
+      note.saveTimeout = setTimeout(() => {
         if (this.state.user) {
           if (note.id === null) {
             noteService
@@ -124,7 +128,7 @@ class App extends Component {
                 this.setState({ notes: notes })
                 this.hideNotification(createdNote)
               })
-              .catch(error => { console.log(error) })
+              .catch(error => console.log(error))
           } else {
             noteService
               .update(note)
@@ -136,7 +140,7 @@ class App extends Component {
                 this.setState({ notes: notes })
                 this.hideNotification(updatedNote)
               })
-              .catch(error => { console.log(error) })
+              .catch(error => console.log(error))
           }
         } else {
           note.notification = 'Login to save note'
@@ -146,7 +150,6 @@ class App extends Component {
           this.setState({ notes: notes })
           this.hideNotification(note)
         }
-        delete this.timeouts[note.id]
       }, 3000)
     }
   }
@@ -154,7 +157,6 @@ class App extends Component {
   handleRemove = (note) => () => {
     if (!note.author) {
       if (window.confirm('Are you sure you want to remove this note?')) {
-        clearTimeout(note.saveTimeout)
         if (note.id === null) {
           const notes = this.state.notes.filter(n => n.id !== note.id)
           this.setState({ notes: notes })
@@ -181,7 +183,10 @@ class App extends Component {
     }
     const index = this.state.notes.findIndex(n => n.id === note.id)
     const notes = update(this.state.notes, {
-      [index]: { ['position']: { $set: position } }
+      [index]: {
+        ['modified']: { $set: true },
+        ['position']: { $set: position }
+      }
     })
     this.setState({ notes: notes })
     this.saveNote(notes[index])
@@ -193,7 +198,10 @@ class App extends Component {
     if (note) {
       const index = this.state.notes.findIndex(n => n.id === note.id)
       const notes = update(this.state.notes, {
-        [index]: { [name]: { $set: value } }
+        [index]: {
+          ['modified']: { $set: true },
+          [name]: { $set: value }
+        }
       })
       this.setState({ notes: notes })
       this.saveNote(notes[index])
