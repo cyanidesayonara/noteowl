@@ -1,17 +1,16 @@
 const Note = require('../models/note')
 const User = require('../models/user')
 
-const initialNotes = [
-  {
-    title: 'Title',
-    content: 'HTML on helppoa',
-    important: false
-  },
-  {
-    title: 'Title',
-    content: 'HTTP-protokollan tärkeimmät metodit ovat GET ja POST',
-    important: true
-  }
+const initialNotes = [{
+  title: 'Title',
+  content: 'HTML on helppoa',
+  important: false
+},
+{
+  title: 'Title',
+  content: 'HTTP-protokollan tärkeimmät metodit ovat GET ja POST',
+  important: true
+}
 ]
 
 const format = (note) => {
@@ -42,5 +41,9 @@ const usersInDb = async () => {
 }
 
 module.exports = {
-  initialNotes, format, nonExistingId, notesInDb, usersInDb
+  initialNotes,
+  format,
+  nonExistingId,
+  notesInDb,
+  usersInDb
 }

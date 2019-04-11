@@ -1,6 +1,6 @@
 import React from 'react'
 import Delete from './Delete'
-import ColorChanger from './ColorChanger.js'
+import ColorChanger from './ColorChanger'
 
 const NoteControls = ({
   user,

@@ -1,8 +1,15 @@
 const supertest = require('supertest')
-const { app, server } = require('../index')
+const {
+  app,
+  server
+} = require('../index')
 const api = supertest(app)
 const Note = require('../models/note')
-const { initialNotes, nonExistingId, notesInDb } = require('./test_helper')
+const {
+  initialNotes,
+  nonExistingId,
+  notesInDb
+} = require('./test_helper')
 
 describe('when there is initially some notes saved', async () => {
   beforeAll(async () => {

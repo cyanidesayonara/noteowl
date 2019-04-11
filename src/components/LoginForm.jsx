@@ -1,6 +1,6 @@
 import React from 'react'
-import LoginMessage from './LoginMessage.js'
-import LoginField from './LoginField.js'
+import LoginMessage from './LoginMessage'
+import LoginField from './LoginField'
 
 const LoginForm = ({
   login,

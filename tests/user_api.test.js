@@ -1,10 +1,15 @@
 const User = require('../models/user')
-const { usersInDb } = require('./test_helper')
+const {
+  usersInDb
+} = require('./test_helper')
 
 describe.only('when there is initially one user at db', async () => {
   beforeAll(async () => {
     await User.remove({})
-    const user = new User({ username: 'root', password: 'sekret' })
+    const user = new User({
+      username: 'root',
+      password: 'sekret'
+    })
     await user.save()
   })
 
@@ -43,7 +48,9 @@ test('POST /users fails with proper statuscode and message if username already t
     .expect(400)
     .expect('Content-Type', /application\/json/)
 
-  expect(result.body).toEqual({ error: 'username must be unique' })
+  expect(result.body).toEqual({
+    error: 'username must be unique'
+  })
 
   const usersAfterOperation = await usersInDb()
   expect(usersAfterOperation.length).toBe(usersBeforeOperation.length)

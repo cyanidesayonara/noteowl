@@ -3,7 +3,7 @@ import TextareaAutosize from 'react-autosize-textarea'
 import Draggable from 'react-draggable'
 import Notification from './Notification'
 import NoteDate from './NoteDate'
-import NoteControls from './NoteControls.js'
+import NoteControls from './NoteControls'
 
 const Note = ({
   note,

@@ -3,11 +3,13 @@
 html {
   box-sizing: border-box;
 }
+
 *,
 *:before,
 *:after {
   box-sizing: inherit;
 }
+
 body {
   margin: 0;
   padding: 0;
@@ -23,6 +25,7 @@ code {
   font-family: source-code-pro, Menlo, Monaco, Consolas, "Courier New",
     monospace;
 }
+
 #navbar {
   display: flex;
   justify-content: center;
@@ -34,7 +37,7 @@ code {
   background: #fff;
   padding: 10px;
   text-align: center;
-  box-shadow: rgba(0,0,0,.3) 0 0 10px;
+  box-shadow: rgba(0, 0, 0, .3) 0 0 10px;
 }
 
 #logo {
@@ -44,10 +47,12 @@ code {
   border-radius: 2px;
   margin-right: 10px;
 }
+
 #login form,
 #logout form {
   display: flex;
 }
+
 #login form button,
 #logout form button {
   margin-left: 10px;
@@ -58,10 +63,12 @@ ul {
   padding: 0;
   list-style: none;
 }
+
 input,
 button {
   outline: none;
 }
+
 button {
   border: 2px solid black;
   border-radius: 2px;
@@ -69,15 +76,18 @@ button {
   padding: 5px;
   cursor: pointer;
 }
+
 .d-none {
   display: none;
 }
+
 #notes {
   padding: 91px 10px 10px;
   min-height: 100vh;
   text-align: center;
   position: relative;
 }
+
 .note {
   width: 280px;
   position: absolute;
@@ -88,6 +98,7 @@ button {
   box-shadow: rgba(0, 0, 0, .3) 0 0 10px;
   cursor: move;
 }
+
 .notification {
   position: absolute;
   text-align: center;
@@ -97,23 +108,27 @@ button {
   right: 0;
   padding: 10px;
 }
+
 .note .owl-field {
   margin: 10px 0;
 }
+
 .note textarea {
   font-family: inherit;
-  resize: none!important;
+  resize: none !important;
   font-size: 24px;
   font-weight: inherit;
   width: 100%;
   outline: none;
   padding: 0;
 }
+
 .owl-field input,
 .owl-field textarea {
   border: none;
   background: none;
 }
+
 .owl-field input+.border,
 .owl-field textarea+.border {
   background: #000;
@@ -124,46 +139,61 @@ button {
   transform: scaleX(0);
   transition: transform .25s;
 }
+
 .owl-field input:hover+.border,
 .owl-field input:focus+.border,
 .owl-field textarea:hover+.border,
 .owl-field textarea:focus+.border {
   transform: scaleX(1);
 }
+
 .note:focus-within,
 .react-draggable-dragging {
   z-index: 0;
   animation: toTop forwards;
 }
+
 @keyframes toTop {
-  0%   { z-index: 0; }
-  100% { z-index: 9000; }
+  0% {
+    z-index: 0;
+  }
+
+  100% {
+    z-index: 9000;
+  }
 }
 
 .color-yellow {
   background: #FFFF88;
 }
+
 .color-blue {
   background: #88FFFF;
 }
+
 .color-red {
   background: #FF8888;
 }
+
 .color-green {
   background: #88FF88;
 }
+
 .note-controls {
   display: flex;
 }
+
 .color-changer {
   justify-self: flex-end;
 }
+
 .color-input {
   display: inline-block;
   margin: 5px;
   border-radius: 50%;
   border: 2px solid black;
 }
+
 .note-date {
   pointer-events: none;
   color: #666;
@@ -180,6 +210,7 @@ button {
   position: absolute;
   overflow: hidden;
 }
+
 .color-input .checkmark {
   /* <-- style the artificial checkbox */
   position: relative;
@@ -187,6 +218,7 @@ button {
   width: 25px;
   display: block;
 }
+
 [type=checkbox]+.checkmark:hover::after,
 [type=checkbox]:checked+.checkmark::after {
   content: '';
@@ -202,10 +234,12 @@ button {
   -ms-transform: rotate(-45deg);
   transform: rotate(-45deg);
 }
+
 [type=checkbox]+.checkmark:hover::after {
   border-left: 3px solid #888;
   border-bottom: 3px solid #888;
 }
+
 [type=checkbox]:checked+.checkmark:hover::after,
 [type=checkbox]:checked+.checkmark::after {
   border-left: 3px solid #000;
@@ -216,6 +250,6 @@ button {
   .note {
     margin: 20px auto;
     position: unset;
-    transform: translate(0)!important;
+    transform: translate(0) !important;
   }
 }

@@ -1,8 +1,8 @@
 import React from 'react'
-import Logo from './Logo.js'
-import FilterNotes from './FilterNotes.js'
-import LoginForm from './LoginForm.js'
-import LogoutForm from './LogoutForm.js'
+import Logo from './Logo.jsx'
+import FilterNotes from './FilterNotes'
+import LoginForm from './LoginForm'
+import LogoutForm from './LogoutForm'
 
 const Navbar = ({
   login,
