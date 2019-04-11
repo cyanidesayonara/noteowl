@@ -1,4 +1,4 @@
-import React, { Component } from 'react'
+import React, { useState } from 'react'
 import Navbar from './components/Navbar.jsx'
 import Notes from './components/Notes.jsx'
 import noteService from './services/notes.js'
@@ -6,21 +6,16 @@ import loginService from './services/login.js'
 import update from 'immutability-helper'
 import ReactGA from 'react-ga'
 
-class App extends Component {
-  constructor(props) {
-    super(props)
-    this.state = {
-      notes: [],
-      filter: '',
-      username: '',
-      password: '',
-      user: null,
-      loginMessage: null
-    }
-  }
+const App = props => {
+  const [notes, setNotes] = useState(props.notes)
+  const [filter, setFilter] = useState('')
+  const [username, setUsername] = useState('')
+  const [password, setPassword] = useState('')
+  const [user, setUser] = useState(null)
+  const [loginMessage, setLoginMessage] = useState('')
 
   // set notification to null after timeout
-  hideNotification = note => {
+  const hideNotification = note => {
     setTimeout(() => {
       const index = this.state.notes.findIndex(n => n.id === note.id)
       // index is -1 if note not in notes
@@ -32,93 +27,65 @@ class App extends Component {
             }
           }
         })
-        this.setState({
-          notes: notes
-        })
+        setNotes(notes)
       }
     }, 3000)
   }
 
-  componentDidMount() {
+  useEffect(() => {
     document.title = 'NoteOwl'
     // save user to local storage
     const loggedUserJSON = window.localStorage.getItem('user')
     if (loggedUserJSON) {
-      const user = JSON.parse(loggedUserJSON)
-      this.setState({
-        user: user
-      })
-      noteService.setToken(user.token)
-      noteService.getAll().then(notes =>
-        this.setState({
-          notes: notes
-        })
-      )
+      const loggedUser = JSON.parse(loggedUserJSON)
+      setUser(loggedUser)
+      noteService.setToken(loggedUser.token)
+      noteService.getAll().then(notes => setNotes(notes))
     }
     // initialize GA
     ReactGA.initialize('UA-120584024-4')
     ReactGA.pageview('/')
-  }
+  }, [])
 
-  logout = async event => {
+  const logout = async event => {
     event.preventDefault()
 
     try {
-      noteService.removeToken(this.state.user.token)
+      noteService.removeToken(user.token)
       window.localStorage.removeItem('user')
-      this.setState({
-        user: null
-      })
-      noteService.getAll().then(notes =>
-        this.setState({
-          notes: notes
-        })
-      )
+      setUser(null)
+      noteService.getAll().then(notes => setNotes(notes))
     } catch (exception) {
-      this.setState({
-        user: null
-      })
+      setUser(null)
     }
   }
 
-  login = async event => {
+  const login = async event => {
     event.preventDefault()
 
     try {
       const user = await loginService.login({
-        username: this.state.username,
-        password: this.state.password
+        username: username,
+        password: password
       })
 
       window.localStorage.setItem('user', JSON.stringify(user))
       noteService.setToken(user.token)
 
-      this.setState({
-        user: user,
-        username: '',
-        password: ''
-      })
+      setUser(user)
+      setUsername('')
+      setPassword('')
       // if notes are unsaved
-      this.state.notes.map(note =>
-        note.modified === true ? this.saveNote(note) : null
-      )
+      notes.map(note => (note.modified === true ? saveNote(note) : null))
     } catch (exception) {
-      this.setState({
-        loginMessage: 'Username and/or password incorrect',
-        password: ''
-      })
-      setTimeout(
-        () =>
-          this.setState({
-            loginMessage: null
-          }),
-        3000
-      )
+      setLoginMessage('Username and/or password incorrect')
+      setPassword('')
+      setTimeout(() => setLoginMessage(''), 3000)
     }
   }
 
-  newNote = () => {
-    if (!this.state.notes.find(n => n.id === null)) {
+  const newNote = () => {
+    if (!notes.find(n => n.id === null)) {
       const note = {
         id: null,
         title: '',
@@ -134,106 +101,90 @@ class App extends Component {
         user: null,
         color: 'yellow'
       }
-      this.setState({
-        notes: this.state.notes.concat(note)
-      })
+      setNotes(notes.concat(note))
     }
   }
 
-  saveNote = note => {
+  const saveNote = note => {
     if (note.title && note.content) {
       clearTimeout(note.saveTimeout)
       note.saveTimeout = setTimeout(() => {
-        if (this.state.user) {
+        if (user) {
           if (note.id === null) {
             noteService
               .create(note)
               .then(createdNote => {
                 createdNote.notification = 'Note saved'
-                const index = this.state.notes.findIndex(n => n.id === null)
-                const notes = update(this.state.notes, {
+                const index = notes.findIndex(n => n.id === null)
+                const updatedNotes = update(notes, {
                   [index]: {
                     $set: createdNote
                   }
                 })
-                this.setState({
-                  notes: notes
-                })
-                this.hideNotification(createdNote)
+                setNotes(updatedNotes)
+                hideNotification(createdNote)
               })
-              .catch(error => console.log(error))
+              .catch(console.log(error))
           } else {
             noteService
               .update(note)
               .then(updatedNote => {
                 updatedNote.notification = 'Note saved'
-                const index = this.state.notes.findIndex(
-                  n => n.id === updatedNote.id
-                )
-                const notes = update(this.state.notes, {
+                const index = notes.findIndex(n => n.id === updatedNote.id)
+                const updatedNotes = update(notes, {
                   [index]: {
                     $set: updatedNote
                   }
                 })
-                this.setState({
-                  notes: notes
-                })
-                this.hideNotification(updatedNote)
+                setNotes(updatedNotes)
+                hideNotification(updatedNote)
               })
-              .catch(error => console.log(error))
+              .catch(console.log(error))
           }
         } else {
           note.notification = 'Login to save note'
-          const index = this.state.notes.findIndex(n => n.id === note.id)
-          const notes = update(this.state.notes, {
+          const index = notes.findIndex(n => n.id === note.id)
+          const updatedNotes = update(notes, {
             [index]: {
               $set: note
             }
           })
-          this.setState({
-            notes: notes
-          })
-          this.hideNotification(note)
+          setNotes(updatedNotes)
+          hideNotification(note)
         }
       }, 3000)
     }
   }
 
-  handleRemove = note => () => {
+  const handleRemove = note => () => {
     if (!note.author) {
       if (window.confirm('Are you sure you want to remove this note?')) {
         if (note.id === null) {
-          const notes = this.state.notes.filter(n => n.id !== note.id)
-          this.setState({
-            notes: notes
-          })
+          const filteredNotes = notes.filter(n => n.id !== note.id)
+          setNotes(filteredNotes)
         } else {
           noteService
             .remove(note)
             .then(response => {
-              const notes = this.state.notes.filter(n => n.id !== note.id)
-              this.setState({
-                notes: notes
-              })
+              const filteredNotes = notes.filter(n => n.id !== note.id)
+              setNotes(filteredNotes)
             })
             .catch(error => {
-              const notes = this.state.notes.filter(n => n.id !== note.id)
-              this.setState({
-                notes: notes
-              })
+              const filteredNotes = notes.filter(n => n.id !== note.id)
+              setNotes(filteredNotes)
             })
         }
       }
     }
   }
 
-  handleDrag = note => (event, ui) => {
+  const handleDrag = note => (event, ui) => {
     const position = {
       x: +note.position.x + +ui.deltaX.toFixed(0),
       y: +note.position.y + +ui.deltaY.toFixed(0)
     }
-    const index = this.state.notes.findIndex(n => n.id === note.id)
-    const notes = update(this.state.notes, {
+    const index = notes.findIndex(n => n.id === note.id)
+    const updatedNotes = update(notes, {
       [index]: {
         ['modified']: {
           $set: true
@@ -243,18 +194,16 @@ class App extends Component {
         }
       }
     })
-    this.setState({
-      notes: notes
-    })
-    this.saveNote(notes[index])
+    setNotes(updatedNotes)
+    saveNote(notes[index])
   }
 
-  handleInputChange = note => event => {
+  const handleInputChange = note => event => {
     const value = event.target.value
     const name = event.target.name
     if (note) {
-      const index = this.state.notes.findIndex(n => n.id === note.id)
-      const notes = update(this.state.notes, {
+      const index = notes.findIndex(n => n.id === note.id)
+      const updatedNotes = update(notes, {
         [index]: {
           ['modified']: {
             $set: true
@@ -264,46 +213,41 @@ class App extends Component {
           }
         }
       })
-      this.setState({
-        notes: notes
-      })
-      this.saveNote(notes[index])
+      setNotes(updatedNotes)
+      saveNote(notes[index])
     } else {
-      this.setState({
-        [name]: value
-      })
+      console.log('uh oh')
     }
   }
 
-  render() {
-    const notes = this.state.notes.filter(
-      note =>
-        note.title.toLowerCase().includes(this.state.filter.toLowerCase()) ||
-        note.content.toLowerCase().includes(this.state.filter.toLowerCase())
-    )
-    return (
-      <div id="content">
-        <Navbar
-          login={this.login}
-          logout={this.logout}
-          handleInputChange={this.handleInputChange}
-          filter={this.state.filter}
-          username={this.state.username}
-          password={this.state.password}
-          user={this.state.user}
-          loginMessage={this.state.loginMessage}
-        />{' '}
-        <Notes
-          notes={notes}
-          newNote={this.newNote}
-          handleRemove={this.handleRemove}
-          handleDrag={this.handleDrag}
-          user={this.state.user}
-          handleInputChange={this.handleInputChange}
-        />{' '}
-      </div>
-    )
-  }
+  const shownNotes = notes.filter(
+    note =>
+      note.title.toLowerCase().includes(filter.toLowerCase()) ||
+      note.content.toLowerCase().includes(filter.toLowerCase())
+  )
+
+  return (
+    <div id="content">
+      <Navbar
+        login={login}
+        logout={logout}
+        handleInputChange={handleInputChange}
+        filter={filter}
+        username={username}
+        password={password}
+        user={user}
+        loginMessage={loginMessage}
+      />
+      <Notes
+        notes={shownNotes}
+        newNote={newNote}
+        handleRemove={handleRemove}
+        handleDrag={handleDrag}
+        user={user}
+        handleInputChange={handleInputChange}
+      />
+    </div>
+  )
 }
 
 export default App
