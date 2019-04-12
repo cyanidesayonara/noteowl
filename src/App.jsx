@@ -1,38 +1,21 @@
-import React, { useState } from 'react'
-import Navbar from './components/Navbar.jsx'
-import Notes from './components/Notes.jsx'
-import noteService from './services/notes.js'
-import loginService from './services/login.js'
+import React, { useState, useEffect } from 'react'
+import Navbar from './components/Navbar'
+import Notes from './components/Notes'
+import noteService from './services/notes'
+import loginService from './services/login'
 import update from 'immutability-helper'
 import ReactGA from 'react-ga'
 
 const App = props => {
   const [notes, setNotes] = useState(props.notes)
+  const [user, setUser] = useState(null)
   const [filter, setFilter] = useState('')
   const [username, setUsername] = useState('')
   const [password, setPassword] = useState('')
-  const [user, setUser] = useState(null)
   const [loginMessage, setLoginMessage] = useState('')
 
-  // set notification to null after timeout
-  const hideNotification = note => {
-    setTimeout(() => {
-      const index = this.state.notes.findIndex(n => n.id === note.id)
-      // index is -1 if note not in notes
-      if (index > -1) {
-        const notes = update(this.state.notes, {
-          [index]: {
-            ['notification']: {
-              $set: null
-            }
-          }
-        })
-        setNotes(notes)
-      }
-    }, 3000)
-  }
-
   useEffect(() => {
+    console.log('Using effect')
     document.title = 'NoteOwl'
     // save user to local storage
     const loggedUserJSON = window.localStorage.getItem('user')
@@ -40,12 +23,32 @@ const App = props => {
       const loggedUser = JSON.parse(loggedUserJSON)
       setUser(loggedUser)
       noteService.setToken(loggedUser.token)
-      noteService.getAll().then(notes => setNotes(notes))
     }
+    noteService.getAll().then(notes => {
+      setNotes(notes)
+    })
     // initialize GA
     ReactGA.initialize('UA-120584024-4')
     ReactGA.pageview('/')
   }, [])
+
+  // set notification to null after timeout
+  const hideNotification = note => {
+    setTimeout(() => {
+      const index = notes.findIndex(n => n.id === note.id)
+      // index is -1 if note not in notes
+      if (index > -1) {
+        const updatedNotes = update(notes, {
+          [index]: {
+            ['notification']: {
+              $set: null
+            }
+          }
+        })
+        setNotes(updatedNotes)
+      }
+    }, 3000)
+  }
 
   const logout = async event => {
     event.preventDefault()
@@ -124,7 +127,7 @@ const App = props => {
                 setNotes(updatedNotes)
                 hideNotification(createdNote)
               })
-              .catch(console.log(error))
+              .catch(error => console.log(error))
           } else {
             noteService
               .update(note)
@@ -139,7 +142,7 @@ const App = props => {
                 setNotes(updatedNotes)
                 hideNotification(updatedNote)
               })
-              .catch(console.log(error))
+              .catch(error => console.log(error))
           }
         } else {
           note.notification = 'Login to save note'
@@ -220,11 +223,14 @@ const App = props => {
     }
   }
 
-  const shownNotes = notes.filter(
-    note =>
-      note.title.toLowerCase().includes(filter.toLowerCase()) ||
-      note.content.toLowerCase().includes(filter.toLowerCase())
-  )
+  const shownNotes = notes
+    ? notes.filter(note => {
+        console.log(note.title.toLowerCase().includes(filter.toLowerCase()))
+        note.title.toLowerCase().includes(filter.toLowerCase()) ||
+          note.content.toLowerCase().includes(filter.toLowerCase())
+        return note
+      })
+    : []
 
   return (
     <div id="content">

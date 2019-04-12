@@ -25,9 +25,9 @@ notesRouter.get('/', async (request, response) => {
     const user = await User.findOne({
       _id: decodedToken.id
     })
+  } catch (exception) {
     const notes = await Note.find().populate('user._id')
     return response.json(notes.map(note => Note.format(note)))
-  } catch (exception) {
     return response.json([])
   }
 })

@@ -1,6 +1,6 @@
 import axios from 'axios'
 
-const baseUrl = '/notes'
+const baseUrl = '/api/notes/'
 
 let token = null
 
@@ -18,7 +18,7 @@ const getAll = async () => {
       Authorization: token
     }
   }
-  const response = await axios.get(`${baseUrl}`, config)
+  const response = await axios.get(baseUrl, config)
   return response.data
 }
 
@@ -38,7 +38,7 @@ const update = async note => {
       Authorization: token
     }
   }
-  const response = await axios.put(`${baseUrl}/${note.id}`, note, config)
+  const response = await axios.put(`${baseUrl}${note.id}`, note, config)
   return response.data
 }
 
@@ -48,7 +48,7 @@ const remove = async note => {
       Authorization: token
     }
   }
-  const response = await axios.delete(`${baseUrl}/${note.id}`, config)
+  const response = await axios.delete(`${baseUrl}${note.id}`, config)
   return response.data
 }
 

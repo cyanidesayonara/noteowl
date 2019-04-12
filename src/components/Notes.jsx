@@ -16,19 +16,20 @@ const Notes = ({
       <button onClick={newNote} type="button">
         New note
       </button>
-      {notes.map((note, index) => (
-        <Note
-          key={note.id}
-          note={note}
-          user={user}
-          handleRemove={handleRemove}
-          handleDrag={handleDrag}
-          saveNote={saveNote}
-          handleInputChange={handleInputChange}
-          index={index}
-          colors={colors}
-        />
-      ))}
+      {notes &&
+        notes.map((note, index) => (
+          <Note
+            key={note.id}
+            note={note}
+            user={user}
+            handleRemove={handleRemove}
+            handleDrag={handleDrag}
+            saveNote={saveNote}
+            handleInputChange={handleInputChange}
+            index={index}
+            colors={colors}
+          />
+        ))}
     </div>
   )
 }
