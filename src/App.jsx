@@ -225,7 +225,6 @@ const App = props => {
 
   const shownNotes = notes
     ? notes.filter(note => {
-        console.log(note.title.toLowerCase().includes(filter.toLowerCase()))
         note.title.toLowerCase().includes(filter.toLowerCase()) ||
           note.content.toLowerCase().includes(filter.toLowerCase())
         return note
