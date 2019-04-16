@@ -1,15 +1,9 @@
 const supertest = require('supertest')
-const {
-  app,
-  server
-} = require('../index')
+const { app, server } = require('../index')
+
 const api = supertest(app)
 const Note = require('../models/note')
-const {
-  initialNotes,
-  nonExistingId,
-  notesInDb
-} = require('./test_helper')
+const { initialNotes, nonExistingId, notesInDb } = require('./test_helper')
 
 describe('when there is initially some notes saved', async () => {
   beforeAll(async () => {
@@ -50,21 +44,16 @@ describe('when there is initially some notes saved', async () => {
   test('404 returned by GET /notes/:id with nonexisting valid id', async () => {
     const validNonexistingId = await nonExistingId()
 
-    await api
-      .get(`/notes/${validNonexistingId}`)
-      .expect(404)
+    await api.get(`/notes/${validNonexistingId}`).expect(404)
   })
 
   test('400 is returned by GET /notes/:id with invalid id', async () => {
     const invalidId = '5a3d5da59070081a82a3445'
 
-    await api
-      .get(`/notes/${invalidId}`)
-      .expect(400)
+    await api.get(`/notes/${invalidId}`).expect(400)
   })
 
   describe('addition of a new note', async () => {
-
     test('POST /notes succeeds with valid data', async () => {
       const notesAtStart = await notesInDb()
 
@@ -84,7 +73,9 @@ describe('when there is initially some notes saved', async () => {
       expect(notesAfterOperation.length).toBe(notesAtStart.length + 1)
 
       const contents = notesAfterOperation.map(r => r.content)
-      expect(contents).toContain('async/await yksinkertaistaa asynkronisten funktioiden kutsua')
+      expect(contents).toContain(
+        'async/await yksinkertaistaa asynkronisten funktioiden kutsua'
+      )
     })
 
     test('POST /notes fails with proper statuscode if content is missing', async () => {
@@ -121,9 +112,7 @@ describe('when there is initially some notes saved', async () => {
     test('DELETE /notes/:id succeeds with proper statuscode', async () => {
       const notesAtStart = await notesInDb()
 
-      await api
-        .delete(`/notes/${addedNote._id}`)
-        .expect(204)
+      await api.delete(`/notes/${addedNote.id}`).expect(204)
 
       const notesAfterOperation = await notesInDb()
 

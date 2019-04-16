@@ -1,24 +1,25 @@
 const Note = require('../models/note')
 const User = require('../models/user')
 
-const initialNotes = [{
-  title: 'Title',
-  content: 'HTML on helppoa',
-  important: false
-},
-{
-  title: 'Title',
-  content: 'HTTP-protokollan tärkeimmät metodit ovat GET ja POST',
-  important: true
-}
+const initialNotes = [
+  {
+    title: 'Title',
+    content: 'HTML on helppoa',
+    important: false
+  },
+  {
+    title: 'Title',
+    content: 'HTTP-protokollan tärkeimmät metodit ovat GET ja POST',
+    important: true
+  }
 ]
 
-const format = (note) => {
+const format = note => {
   return {
     title: note.title,
     content: note.content,
     important: note.important,
-    id: note._id
+    id: note.id
   }
 }
 
@@ -27,7 +28,7 @@ const nonExistingId = async () => {
   await note.save()
   await note.remove()
 
-  return note._id.toString()
+  return note.id.toString()
 }
 
 const notesInDb = async () => {

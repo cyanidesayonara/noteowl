@@ -28,10 +28,6 @@ module.exports = {
     "prettier/prettier": [
       "error"
     ],
-    "indent": [
-      "error",
-      2
-    ],
     "linebreak-style": [
       "error",
       "unix"

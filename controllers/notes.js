@@ -22,7 +22,7 @@ notesRouter.get('/', async (request, response) => {
         error: 'token missing or invalid'
       })
     }
-    await User.findOne({
+    return await User.findOne({
       _id: decodedToken.id
     })
   } catch (exception) {

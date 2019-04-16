@@ -1,5 +1,7 @@
+const dotenv = require('dotenv')
+
 if (process.env.NODE_ENV !== 'production') {
-  require('dotenv').config()
+  dotenv.config()
 }
 
 let port = process.env.PORT
