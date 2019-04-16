@@ -1,18 +1,40 @@
 const mongoose = require('mongoose')
 
 const noteSchema = new mongoose.Schema({
-  title: String,
+  title: {
+    type: String,
+    required: true
+  },
   user: {
     type: mongoose.Schema.Types.ObjectId,
-    ref: 'User'
+    ref: 'User',
+    required: true
   },
-  content: String,
-  created: Date,
-  updated: Date,
-  important: Boolean,
+  content: {
+    type: String,
+    required: true
+  },
+  created: {
+    type: Date,
+    required: true
+  },
+  updated: {
+    type: Date,
+    required: true
+  },
+  important: {
+    type: Boolean,
+    required: true
+  },
   notification: String,
-  position: Object,
-  color: String
+  position: {
+    type: Object,
+    required: true
+  },
+  color: {
+    type: String,
+    required: true
+  }
 })
 
 noteSchema.statics.format = note => {
