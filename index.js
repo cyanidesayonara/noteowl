@@ -1,7 +1,6 @@
 const http = require('http')
 const express = require('express')
 const bodyParser = require('body-parser')
-const cors = require('cors')
 const mongoose = require('mongoose')
 const middleware = require('./utils/middleware')
 const notesRouter = require('./controllers/notes')
@@ -22,7 +21,6 @@ mongoose
     console.log(error)
   })
 
-app.use(cors())
 app.use(bodyParser.json())
 app.use(express.static('build'))
 app.use(middleware.logger)

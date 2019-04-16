@@ -1,21 +1,21 @@
 import React from 'react'
 
-const ColorChanger = ({ colors, note, handleInputChange }) => {
+const ColorChanger = props => {
   return (
     <div className="color-changer">
-      {colors.map(color => {
+      {props.colors.map(color => {
         let checked = false
-        if (note.color === color) {
+        if (props.note.color === color) {
           checked = true
         }
         return (
           <label className={'color-input color-' + color}>
             <input
               name="color"
-              value={color}
+              value={props.color}
               type="checkbox"
               checked={checked}
-              onChange={handleInputChange(note)}
+              onChange={props.handleInputChange(props.note)}
             />
             <span className="checkmark" />
           </label>

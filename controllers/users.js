@@ -9,7 +9,7 @@ usersRouter.get('/', async (request, response) => {
 
 usersRouter.post('/', async (request, response) => {
   try {
-    const body = request.body
+    const { body } = request
 
     const existingUser = await User.find({
       username: body.username
@@ -25,7 +25,7 @@ usersRouter.post('/', async (request, response) => {
 
     const user = new User({
       username: body.username,
-      passwordHash: passwordHash,
+      passwordHash,
       notes: []
     })
 

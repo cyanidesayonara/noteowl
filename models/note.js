@@ -12,12 +12,12 @@ const noteSchema = new mongoose.Schema({
   important: Boolean,
   notification: String,
   position: Object,
-  color: String,
+  color: String
 })
 
-noteSchema.statics.format = (note) => {
+noteSchema.statics.format = note => {
   return {
-    id: note._id,
+    id: note.id,
     title: note.title,
     user: note.user,
     content: note.content,
@@ -26,7 +26,7 @@ noteSchema.statics.format = (note) => {
     important: note.important,
     notification: note.notification,
     position: note.position,
-    color: note.color,
+    color: note.color
   }
 }
 
