@@ -22,13 +22,13 @@ const App = () => {
       const loggedUser = JSON.parse(loggedUserJSON)
       setUser(loggedUser)
       noteService.setToken(loggedUser.token)
-      noteService
-        .getAll()
-        .then(notes => {
-          setNotes(notes)
-        })
-        .catch(exception => console.log(exception))
     }
+    noteService
+      .getAll()
+      .then(notes => {
+        setNotes(notes)
+      })
+      .catch(exception => console.log(exception))
     // initialize GA
     ReactGA.initialize('UA-120584024-4')
     ReactGA.pageview('/')
