@@ -22,12 +22,16 @@ notesRouter.get('/', async (request, response) => {
         error: 'token missing or invalid'
       })
     }
-    return await User.findOne({
+    const user = await User.findOne({
       _id: decodedToken.id
     })
-  } catch (exception) {
+    console.log(user)
     const notes = await Note.find().populate('user._id')
     return response.json(notes.map(note => Note.format(note)))
+  } catch (exception) {
+    return response.status(500).send({
+      error: 'something went wrong...'
+    })
   }
 })
 
@@ -76,7 +80,6 @@ notesRouter.post('/', async (request, response) => {
     const user = await User.findOne({
       _id: decodedToken.id
     })
-
     const note = new Note({
       title: body.title,
       user: user.id,

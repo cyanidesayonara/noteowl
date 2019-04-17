@@ -17,7 +17,7 @@ const Notes = props => {
             handleRemove={props.handleRemove}
             handleDrag={props.handleDrag}
             saveNote={props.saveNote}
-            handleInputChange={props.handleInputChange}
+            handleNoteChange={props.handleNoteChange}
             index={index}
             colors={colors}
           />

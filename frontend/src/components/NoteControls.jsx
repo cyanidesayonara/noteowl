@@ -12,7 +12,7 @@ const NoteControls = props => {
       />
       <ColorChanger
         note={props.note}
-        handleInputChange={props.handleInputChange}
+        handleNoteChange={props.handleNoteChange}
         colors={props.colors}
       />
     </div>

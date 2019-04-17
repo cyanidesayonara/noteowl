@@ -6,8 +6,8 @@ import loginService from './services/login'
 import update from 'immutability-helper'
 import ReactGA from 'react-ga'
 
-const App = props => {
-  const [notes, setNotes] = useState(props.notes)
+const App = () => {
+  const [notes, setNotes] = useState([])
   const [user, setUser] = useState(null)
   const [filter, setFilter] = useState('')
   const [username, setUsername] = useState('')
@@ -22,10 +22,13 @@ const App = props => {
       const loggedUser = JSON.parse(loggedUserJSON)
       setUser(loggedUser)
       noteService.setToken(loggedUser.token)
+      noteService
+        .getAll()
+        .then(notes => {
+          setNotes(notes)
+        })
+        .catch(exception => console.log(exception))
     }
-    noteService.getAll().then(notes => {
-      setNotes(notes)
-    })
     // initialize GA
     ReactGA.initialize('UA-120584024-4')
     ReactGA.pageview('/')
@@ -108,9 +111,13 @@ const App = props => {
   }
 
   const saveNote = note => {
-    if (note.title && note.content) {
+    console.log(note.title, note.content)
+    if (note.title !== '' && note.content !== '') {
+      console.log(note.saveTimeout)
       clearTimeout(note.saveTimeout)
+      console.log(note.saveTimeout)
       note.saveTimeout = setTimeout(() => {
+        console.log(note.saveTimeout)
         if (user) {
           if (note.id === null) {
             noteService
@@ -200,26 +207,22 @@ const App = props => {
     saveNote(notes[index])
   }
 
-  const handleInputChange = note => event => {
+  const handleNoteChange = note => event => {
     const value = event.target.value
     const name = event.target.name
-    if (note) {
-      const index = notes.findIndex(n => n.id === note.id)
-      const updatedNotes = update(notes, {
-        [index]: {
-          ['modified']: {
-            $set: true
-          },
-          [name]: {
-            $set: value
-          }
+    const index = notes.findIndex(n => n.id === note.id)
+    const updatedNotes = update(notes, {
+      [index]: {
+        ['modified']: {
+          $set: true
+        },
+        [name]: {
+          $set: value
         }
-      })
-      setNotes(updatedNotes)
-      saveNote(notes[index])
-    } else {
-      console.log('uh oh')
-    }
+      }
+    })
+    setNotes(updatedNotes)
+    saveNote(notes[index])
   }
 
   const shownNotes = notes
@@ -235,7 +238,9 @@ const App = props => {
       <Navbar
         login={login}
         logout={logout}
-        handleInputChange={handleInputChange}
+        handleFilterChange={({ target }) => setFilter(target.value)}
+        handleUsernameChange={({ target }) => setUsername(target.value)}
+        handlePasswordChange={({ target }) => setPassword(target.value)}
         filter={filter}
         username={username}
         password={password}
@@ -248,7 +253,7 @@ const App = props => {
         handleRemove={handleRemove}
         handleDrag={handleDrag}
         user={user}
-        handleInputChange={handleInputChange}
+        handleNoteChange={handleNoteChange}
       />
     </div>
   )

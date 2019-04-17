@@ -7,7 +7,7 @@ const FilterNotes = props => {
         placeholder="Filter notes"
         value={props.filter}
         name="filter"
-        onChange={props.handleInputChange(null)}
+        onChange={props.handleFilterChange}
       />
     </div>
   )

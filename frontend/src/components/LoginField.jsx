@@ -8,7 +8,7 @@ const LoginField = props => {
         placeholder={props.placeholder}
         name={props.name}
         value={props.value}
-        onChange={props.handleInputChange(null)}
+        onChange={props.handleInputChange}
       />
       <span className="border" />
     </div>

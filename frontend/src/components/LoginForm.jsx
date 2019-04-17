@@ -13,14 +13,14 @@ const LoginForm = props => {
             placeholder="Username"
             name="username"
             value={props.username}
-            handleInputChange={props.handleInputChange}
+            handleInputChange={props.handleUsernameChange}
           />
           <LoginField
             type="password"
             placeholder="Password"
             name="password"
             value={props.password}
-            handleInputChange={props.handleInputChange}
+            handleInputChange={props.handlePasswordChange}
           />
         </div>
         <button type="submit">Login</button>

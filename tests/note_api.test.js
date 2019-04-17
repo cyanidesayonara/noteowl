@@ -17,7 +17,7 @@ describe('when there is initially some notes saved', async () => {
     const notesInDatabase = await notesInDb()
 
     const response = await api
-      .get('/notes')
+      .get('/api/notes')
       .expect(200)
       .expect('Content-Type', /application\/json/)
 
@@ -34,7 +34,7 @@ describe('when there is initially some notes saved', async () => {
     const aNote = notesInDatabase[0]
 
     const response = await api
-      .get(`/notes/${aNote.id}`)
+      .get(`/api/notes/${aNote.id}`)
       .expect(200)
       .expect('Content-Type', /application\/json/)
 
@@ -50,7 +50,7 @@ describe('when there is initially some notes saved', async () => {
   test('400 is returned by GET /notes/:id with invalid id', async () => {
     const invalidId = '5a3d5da59070081a82a3445'
 
-    await api.get(`/notes/${invalidId}`).expect(400)
+    await api.get(`/api/notes/${invalidId}`).expect(400)
   })
 
   describe('addition of a new note', async () => {
@@ -63,7 +63,7 @@ describe('when there is initially some notes saved', async () => {
       }
 
       await api
-        .post('/notes')
+        .post('/api/notes')
         .send(newNote)
         .expect(200)
         .expect('Content-Type', /application\/json/)
@@ -86,7 +86,7 @@ describe('when there is initially some notes saved', async () => {
       const notesAtStart = await notesInDb()
 
       await api
-        .post('/notes')
+        .post('/api/notes')
         .send(newNote)
         .expect(400)
 
@@ -112,7 +112,7 @@ describe('when there is initially some notes saved', async () => {
     test('DELETE /notes/:id succeeds with proper statuscode', async () => {
       const notesAtStart = await notesInDb()
 
-      await api.delete(`/notes/${addedNote.id}`).expect(204)
+      await api.delete(`/api/notes/${addedNote.id}`).expect(204)
 
       const notesAfterOperation = await notesInDb()
 

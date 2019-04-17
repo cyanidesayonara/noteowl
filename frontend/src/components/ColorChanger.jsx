@@ -9,13 +9,13 @@ const ColorChanger = props => {
           checked = true
         }
         return (
-          <label className={'color-input color-' + color}>
+          <label key={color} className={'color-input color-' + color}>
             <input
               name="color"
-              value={props.color}
+              value={color}
               type="checkbox"
               checked={checked}
-              onChange={props.handleInputChange(props.note)}
+              onChange={props.handleNoteChange(props.note)}
             />
             <span className="checkmark" />
           </label>

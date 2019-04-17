@@ -24,7 +24,7 @@ describe.only('when there is initially one user at db', async () => {
     }
 
     await api
-      .post('/users')
+      .post('/api/users')
       .send(newUser)
       .expect(200)
       .expect('Content-Type', /application\/json/)
@@ -43,7 +43,7 @@ describe.only('when there is initially one user at db', async () => {
     }
 
     const result = await api
-      .post('/users')
+      .post('/api/users')
       .send(newUser)
       .expect(400)
       .expect('Content-Type', /application\/json/)

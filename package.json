@@ -1,5 +1,5 @@
 {
-  "name": "noteowl",
+  "name": "noteowl-backend",
   "version": "0.0.1",
   "private": true,
   "description": "Note-taking app with calendar",

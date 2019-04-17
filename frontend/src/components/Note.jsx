@@ -6,7 +6,6 @@ import NoteDate from './NoteDate'
 import NoteControls from './NoteControls'
 
 const Note = props => {
-  console.log(props)
   const zIndex = 8000 + props.index
   const divStyle = {
     zIndex: zIndex
@@ -27,7 +26,7 @@ const Note = props => {
               value={props.note.title}
               name="title"
               placeholder="Title"
-              onChange={props.handleInputChange(props.note)}
+              onChange={props.handleNoteChange(props.note)}
             />
             <span className="border" />
           </div>
@@ -39,7 +38,7 @@ const Note = props => {
               value={props.note.content}
               name="content"
               placeholder="Add text here"
-              onChange={props.handleInputChange(props.note)}
+              onChange={props.handleNoteChange(props.note)}
             />
             <span className="border" />
           </div>
@@ -48,7 +47,7 @@ const Note = props => {
             note={props.note}
             handleRemove={props.handleRemove}
             colors={props.colors}
-            handleInputChange={props.handleInputChange}
+            handleNoteChange={props.handleNoteChange}
           />
         </form>
       </div>

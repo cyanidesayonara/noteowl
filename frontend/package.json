@@ -1,5 +1,5 @@
 {
-  "name": "noteowl",
+  "name": "noteowl-frontend",
   "version": "0.0.1",
   "private": true,
   "description": "Note-taking app with calendar",
@@ -23,6 +23,7 @@
   "license": "ISC",
   "dependencies": {
     "axios": "^0.18.0",
+    "http-proxy-middleware": "^0.19.1",
     "immutability-helper": "^2.9.1",
     "moment": "^2.24.0",
     "node": "^10.15.0",
@@ -51,6 +52,5 @@
     "nodemon": "^1.18.9",
     "prettier": "^1.16.4",
     "react-testing-library": "^6.0.3"
-  },
-  "proxy": "http://localhost:8000"
+  }
 }
