@@ -1,34 +1,31 @@
-import React, { useState, useEffect } from 'react'
+import React, { useEffect } from 'react'
+import { connect } from 'react-redux'
+import useField from './hooks/useField'
 import Navbar from './components/Navbar'
 import Notes from './components/Notes'
+import userService from './services/users'
 import noteService from './services/notes'
 import loginService from './services/login'
+import { connect } from 'react-redux'
 import update from 'immutability-helper'
 import ReactGA from 'react-ga'
 
-const App = () => {
-  const [notes, setNotes] = useState([])
-  const [user, setUser] = useState(null)
-  const [filter, setFilter] = useState('')
-  const [username, setUsername] = useState('')
-  const [password, setPassword] = useState('')
-  const [loginMessage, setLoginMessage] = useState('')
-
+const App = props => {
   useEffect(() => {
     document.title = 'NoteOwl'
     // save user to local storage
     const loggedUserJSON = window.localStorage.getItem('user')
     if (loggedUserJSON) {
       const loggedUser = JSON.parse(loggedUserJSON)
-      setUser(loggedUser)
-      noteService.setToken(loggedUser.token)
+      userService
+        .getOne(loggedUser.id)
+        .then(user => {
+          setUser(user)
+          noteService.setToken(loggedUser.token)
+          props.initializeNotes()
+        })
+        .catch(exception => console.log(exception))
     }
-    noteService
-      .getAll()
-      .then(notes => {
-        setNotes(notes)
-      })
-      .catch(exception => console.log(exception))
     // initialize GA
     ReactGA.initialize('UA-120584024-4')
     ReactGA.pageview('/')
@@ -56,9 +53,9 @@ const App = () => {
     event.preventDefault()
 
     try {
-      noteService.removeToken(user.token)
       window.localStorage.removeItem('user')
       setUser(null)
+      noteService.removeToken(user.token)
       noteService.getAll().then(notes => setNotes(notes))
     } catch (exception) {
       setUser(null)
@@ -70,8 +67,8 @@ const App = () => {
 
     try {
       const user = await loginService.login({
-        username: username,
-        password: password
+        username: username.value,
+        password: password.value
       })
 
       window.localStorage.setItem('user', JSON.stringify(user))
@@ -111,13 +108,9 @@ const App = () => {
   }
 
   const saveNote = note => {
-    console.log(note.title, note.content)
     if (note.title !== '' && note.content !== '') {
-      console.log(note.saveTimeout)
       clearTimeout(note.saveTimeout)
-      console.log(note.saveTimeout)
       note.saveTimeout = setTimeout(() => {
-        console.log(note.saveTimeout)
         if (user) {
           if (note.id === null) {
             noteService
@@ -227,8 +220,8 @@ const App = () => {
 
   const shownNotes = notes
     ? notes.filter(note => {
-        note.title.toLowerCase().includes(filter.toLowerCase()) ||
-          note.content.toLowerCase().includes(filter.toLowerCase())
+        note.title.toLowerCase().includes(filter.value.toLowerCase()) ||
+          note.content.toLowerCase().includes(filter.value.toLowerCase())
         return note
       })
     : []
@@ -238,9 +231,6 @@ const App = () => {
       <Navbar
         login={login}
         logout={logout}
-        handleFilterChange={({ target }) => setFilter(target.value)}
-        handleUsernameChange={({ target }) => setUsername(target.value)}
-        handlePasswordChange={({ target }) => setPassword(target.value)}
         filter={filter}
         username={username}
         password={password}
@@ -259,4 +249,7 @@ const App = () => {
   )
 }
 
-export default App
+export default connect(
+  null,
+  { initializeNotes }
+)(App)

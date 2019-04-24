@@ -4,7 +4,14 @@ const User = require('../models/user')
 
 usersRouter.get('/', async (request, response) => {
   const users = await User.find({}).populate('notes')
-  return response.json(users.map(user => User.format(user)))
+  return response.json(users.map(user => user.toJSON()))
+})
+
+usersRouter.get('/:id', async (request, response) => {
+  const user = await User.findById(request.params.id).populate('notes', {
+    title: 1
+  })
+  return response.json(user)
 })
 
 usersRouter.post('/', async (request, response) => {
@@ -31,7 +38,7 @@ usersRouter.post('/', async (request, response) => {
 
     const savedUser = await user.save()
 
-    return response.json(User.format(savedUser))
+    return response.json(savedUser)
   } catch (exception) {
     return response.status(500).json({
       error: 'something went wrong...'

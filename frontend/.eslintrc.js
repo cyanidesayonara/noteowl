@@ -24,13 +24,17 @@ module.exports = {
     "prettier"
   ],
   "rules": {
+
     "multiline-ternary": 0,
     "prettier/prettier": [
       "error"
     ],
     "indent": [
       "error",
-      2
+      2,
+      {
+        "SwitchCase": 1
+      }
     ],
     "linebreak-style": [
       "error",

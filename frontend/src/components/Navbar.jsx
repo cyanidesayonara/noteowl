@@ -8,17 +8,12 @@ const Navbar = props => {
   return (
     <nav id="navbar">
       <Logo />
-      <FilterNotes
-        filterValue={props.filterValue}
-        handleFilterChange={props.handleFilterChange}
-      />
+      <FilterNotes filter={props.filter} />
       {props.user === null && (
         <LoginForm
           login={props.login}
           username={props.username}
           password={props.password}
-          handleUsernameChange={props.handleUsernameChange}
-          handlePasswordChange={props.handlePasswordChange}
           loginMessage={props.loginMessage}
         />
       )}

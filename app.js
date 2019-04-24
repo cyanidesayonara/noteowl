@@ -23,6 +23,7 @@ mongoose
 app.use(bodyParser.json())
 app.use(express.static('build'))
 app.use(middleware.requestLogger)
+app.use(middleware.tokenExtractor)
 app.use('/api/notes', notesRouter)
 app.use('/api/users', usersRouter)
 app.use('/api/login', loginRouter)

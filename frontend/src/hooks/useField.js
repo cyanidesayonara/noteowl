@@ -1,0 +1,21 @@
+import { useState } from 'react'
+
+const useField = (type, name, placeholder) => {
+  const [value, setValue] = useState('')
+
+  const onChange = event => {
+    setValue(event.target.value)
+  }
+
+  const field = {
+    type,
+    name,
+    placeholder,
+    value,
+    onChange
+  }
+
+  return [field, setValue]
+}
+
+export default useField

@@ -3,31 +3,22 @@ const jwt = require('jsonwebtoken')
 const Note = require('../models/note')
 const User = require('../models/user')
 
-const getTokenFrom = request => {
-  const authorization = request.get('authorization')
-  if (authorization && authorization.toLowerCase().startsWith('bearer ')) {
-    return authorization.substring(7)
-  }
-  return null
-}
-
 // get notes
 notesRouter.get('/', async (request, response) => {
   try {
-    const token = getTokenFrom(request)
-
-    const decodedToken = jwt.verify(token, process.env.SECRET_KEY)
-    if (!token || !decodedToken.id) {
+    const decodedToken = jwt.verify(request.token, process.env.SECRET_KEY)
+    if (!request.token || !decodedToken.id) {
       return response.status(401).json({
         error: 'token missing or invalid'
       })
     }
-    const user = await User.findOne({
-      _id: decodedToken.id
+    const user = await User.findById(decodedToken.id)
+    const notes = await Note.find({
+      user
+    }).populate('user', {
+      username: 1
     })
-    console.log(user)
-    const notes = await Note.find().populate('user._id')
-    return response.json(notes.map(note => Note.format(note)))
+    return response.json(notes.map(note => note.toJSON()))
   } catch (exception) {
     return response.status(500).send({
       error: 'something went wrong...'
@@ -38,17 +29,18 @@ notesRouter.get('/', async (request, response) => {
 // get note
 notesRouter.get('/:id', async (request, response) => {
   try {
-    const token = getTokenFrom(request)
-    const decodedToken = jwt.verify(token, process.env.SECRET_KEY)
-    if (!token || !decodedToken.id) {
+    const decodedToken = jwt.verify(request.token, process.env.SECRET_KEY)
+    if (!request.token || !decodedToken.id) {
       return response.status(401).json({
         error: 'token missing or invalid'
       })
     }
-    const note = await Note.findById(request.params.id)
+    const note = await Note.findById(request.params.id).populate('user', {
+      username: 1
+    })
 
     if (note) {
-      return response.json(Note.format(note))
+      return response.json(note)
     }
     return response.status(404).end()
   } catch (exception) {
@@ -63,9 +55,8 @@ notesRouter.post('/', async (request, response) => {
   const { body } = request
 
   try {
-    const token = getTokenFrom(request)
-    const decodedToken = jwt.verify(token, process.env.SECRET_KEY)
-    if (!token || !decodedToken.id) {
+    const decodedToken = jwt.verify(request.token, process.env.SECRET_KEY)
+    if (!request.token || !decodedToken.id) {
       return response.status(401).json({
         error: 'token missing or invalid'
       })
@@ -77,12 +68,10 @@ notesRouter.post('/', async (request, response) => {
       })
     }
 
-    const user = await User.findOne({
-      _id: decodedToken.id
-    })
+    const user = await User.findById(decodedToken.id)
     const note = new Note({
       title: body.title,
-      user: user.id,
+      user,
       content: body.content,
       important: body.important || false,
       created: body.created,
@@ -96,7 +85,7 @@ notesRouter.post('/', async (request, response) => {
     user.notes = user.notes.concat(savedNote)
     await user.save()
 
-    return response.json(Note.format(savedNote))
+    return response.json(savedNote)
   } catch (exception) {
     if (exception.name === 'JsonWebTokenError') {
       return response.status(401).json({
@@ -136,7 +125,7 @@ notesRouter.put('/:id', async (request, response) => {
       new: true
     })
 
-    return response.json(Note.format(updatedNote))
+    return response.json(updatedNote)
   } catch (exception) {
     return response.status(400).send({
       error: 'malformed id'
@@ -148,11 +137,9 @@ notesRouter.put('/:id', async (request, response) => {
 notesRouter.delete('/:id', async (request, response) => {
   try {
     const note = await Note.findByIdAndRemove(request.params.id)
-    const user = await User.findOne({
-      _id: note.user
-    })
+    const user = await User.findById(note.user)
 
-    user.notes = user.notes.filter(n => n.id.toString() !== note.id)
+    user.notes = user.notes.filter(n => n.id !== note.id)
     await user.save()
 
     return response.status(204).end()

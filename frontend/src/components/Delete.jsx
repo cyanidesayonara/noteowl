@@ -2,8 +2,8 @@ import React from 'react'
 
 const Delete = props => {
   if (
-    (props.user && props.note.user === props.user.id) ||
-    props.note.user === null
+    props.note.user === null ||
+    (props.user && props.note.user.id === props.user.id)
   ) {
     return (
       <button type="button" onClick={props.handleRemove(props.note)}>

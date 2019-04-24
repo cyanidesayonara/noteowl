@@ -8,20 +8,8 @@ const LoginForm = props => {
       <LoginMessage loginMessage={props.loginMessage} />
       <form onSubmit={props.login}>
         <div>
-          <LoginField
-            type="text"
-            placeholder="Username"
-            name="username"
-            value={props.username}
-            handleInputChange={props.handleUsernameChange}
-          />
-          <LoginField
-            type="password"
-            placeholder="Password"
-            name="password"
-            value={props.password}
-            handleInputChange={props.handlePasswordChange}
-          />
+          <LoginField field={props.username} />
+          <LoginField field={props.password} />
         </div>
         <button type="submit">Login</button>
       </form>
