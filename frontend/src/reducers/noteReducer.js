@@ -1,19 +1,18 @@
 import noteService from '../services/notes'
 
-// const [notes, setNotes] = useState([])
-// const [user, setUser] = useState(null)
-// const [filter, setFilter] = useField('text', 'filter', 'Filter')
-// const [username, setUsername] = useField('text', 'username', 'Username')
-// const [password, setPassword] = useField('password', 'password', 'Password')
-// const [loginMessage, setLoginMessage] = useState('')
-
 const noteReducer = (state = [], action) => {
   switch (action.type) {
+    case 'INIT_NOTES':
+      return action.data
     case 'SAVE_NOTE':
       return [...state, action.data]
     case 'UPDATE_NOTE': {
       const filteredState = state.filter(note => note.id !== action.data.id)
       return [...filteredState, action.data]
+    }
+    case 'REMOVE_NOTE': {
+      const filteredState = state.filter(note => note.id !== action.data.id)
+      return filteredState
     }
     default:
       return state
@@ -30,24 +29,59 @@ export const initializeNotes = () => {
   }
 }
 
+export const newNote = () => {
+  return async dispatch => {
+    const note = {
+      id: null,
+      title: '',
+      content: '',
+      created: new Date(),
+      updated: null,
+      important: false,
+      notification: null,
+      position: {
+        x: 0,
+        y: 0
+      },
+      user: null,
+      color: 'yellow'
+    }
+    dispatch({
+      type: 'NEW_NOTE',
+      data: note
+    })
+  }
+}
+
 export const saveNote = note => {
-  if (note.title !== '' && note.content !== '') {
+  return async dispatch => {
+    const createdNote = await noteService.create(note)
+    dispatch({
+      type: 'SAVE_NOTE',
+      data: createdNote
+    })
+  }
+}
+
+export const updateNote = note => {
+  return async dispatch => {
+    const updatedNote = await noteService.update(note)
+    dispatch({
+      type: 'UPDATE_NOTE',
+      data: updatedNote
+    })
+  }
+}
+
+export const removeNote = note => {
+  return async dispatch => {
     if (note.id === null) {
-      return async dispatch => {
-        const createdNote = await noteService.create(note)
-        dispatch({
-          type: 'SAVE_NOTE',
-          data: createdNote
-        })
-      }
+      noteService.remove(note)
     }
-    return async dispatch => {
-      const updatedNote = await noteService.update(note)
-      dispatch({
-        type: 'UPDATE_NOTE',
-        data: updatedNote
-      })
-    }
+    dispatch({
+      type: 'REMOVE_NOTE',
+      data: note
+    })
   }
 }
 

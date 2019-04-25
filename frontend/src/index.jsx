@@ -3,12 +3,18 @@ import ReactDOM from 'react-dom'
 import { Provider } from 'react-redux'
 import './index.css'
 import App from './App'
+import About from './About'
 import store from './store'
+import history from './history'
+import { Router, Route } from 'react-router-dom'
 import * as serviceWorker from './serviceWorker'
 
 ReactDOM.render(
   <Provider store={store}>
-    <App />
+    <Router history={history}>
+      <Route exact path="/" component={App} />
+      <Route path="/about" component={About} />
+    </Router>
   </Provider>,
   document.getElementById('root')
 )
