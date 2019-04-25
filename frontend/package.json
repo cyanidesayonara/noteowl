@@ -25,7 +25,6 @@
     "axios": "^0.18.0",
     "history": "^4.9.0",
     "http-proxy-middleware": "^0.19.1",
-    "immutability-helper": "^2.9.1",
     "moment": "^2.24.0",
     "node": "^10.15.0",
     "prop-types": "^15.7.2",

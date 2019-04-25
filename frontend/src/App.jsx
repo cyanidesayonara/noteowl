@@ -6,7 +6,12 @@ import Notes from './components/Notes'
 import userService from './services/users'
 import noteService from './services/notes'
 import loginService from './services/login'
-import { initializeNotes, saveNote, updateNote } from './reducers/noteReducer'
+import {
+  initializeNotes,
+  saveNote,
+  updateNote,
+  removeNote
+} from './reducers/noteReducer'
 import ReactGA from 'react-ga'
 
 const App = props => {
@@ -76,7 +81,7 @@ const App = props => {
   }
 
   const newNote = () => {
-    if (!props.notes.find(n => n.id === null)) {
+    if (!props.notes.find(note => note.id === null)) {
       props.createNote()
     }
   }
@@ -149,13 +154,9 @@ const notesToShow = ({ notes, filter }) => {
     : []
 }
 
-const mapStateToProps = state => {
-  return {
-    notes: notesToShow(state)
-  }
-}
+const mapStateToProps = state => ({ notes: notesToShow(state) })
 
 export default connect(
   mapStateToProps,
-  { initializeNotes, saveNote, updateNote }
+  { initializeNotes, saveNote, updateNote, removeNote }
 )(App)
