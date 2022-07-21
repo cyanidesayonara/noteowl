@@ -1,1 +1,1 @@
-web: node index.js
+web: npm rebuild && node index.js
